@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+    <ion-button slot="end" fill="clear" (click)="close()" aria-label="Fechar">
+      <ion-icon slot="icon-only" name="close-outline" />
+    </ion-button>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Buscar..."
+      [debounce]="100"
+      (ionInput)="onSearch($event)"
+    />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="picker-content">
+  <div class="chip-grid">
+    @for (option of visibleOptions(); track option) {
+      <ion-chip
+        [color]="isSelected(option) ? 'primary' : undefined"
+        (click)="toggle(option)"
+      >
+        {{ option }}
+      </ion-chip>
+    } @empty {
+      <p class="empty">Nenhuma opção encontrada.</p>
+    }
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      slot="start"
+      fill="clear"
+      (click)="reset()"
+      [disabled]="selectedCount() === 0"
+    >
+      Limpar
+    </ion-button>
+    <ion-button slot="end" (click)="apply()">
+      Aplicar
+      @if (selectedCount() > 0) {
+        ({{ selectedCount() }})
+      }
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

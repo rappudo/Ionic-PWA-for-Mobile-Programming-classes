@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.cover {
+  appearance: none;
+  background: none;
+  padding: 0;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border: 3px solid var(--border-color, var(--ion-color-medium));
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 120ms ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+ion-img {
+  width: 100%;
+  height: 100%;
+}
+
+ion-img::part(image) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+}

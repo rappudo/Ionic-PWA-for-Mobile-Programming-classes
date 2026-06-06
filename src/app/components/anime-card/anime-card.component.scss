@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+ion-card {
+  margin: 16px auto;
+  max-width: 560px;
+  width: calc(100% - 24px);
+}
+
+.capa {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 60vh;
+  object-fit: cover;
+}
+
+ion-card-header {
+  padding-top: 16px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.sinopse {
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ficha {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  margin: 0 0 12px;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ion-color-step-150, rgba(0, 0, 0, 0.08));
+    padding-bottom: 4px;
+  }
+
+  dt {
+    font-weight: 600;
+    color: var(--ion-color-medium);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

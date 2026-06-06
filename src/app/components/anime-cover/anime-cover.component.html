@@ -1,0 +1,13 @@
+<button
+  type="button"
+  class="cover"
+  [style.--border-color]="borderColor()"
+  [attr.aria-label]="tituloPrincipal()"
+  (click)="onSelect()"
+>
+  @if (anime().imagem; as src) {
+    <ion-img [src]="src" [alt]="tituloPrincipal()" />
+  } @else {
+    <span class="placeholder">{{ tituloPrincipal() }}</span>
+  }
+</button>

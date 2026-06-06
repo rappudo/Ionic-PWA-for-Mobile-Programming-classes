@@ -1,20 +1,129 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Animes</ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <div class="search-row">
+      <ion-searchbar
+        class="search-row__bar"
+        placeholder="Buscar título, gênero, estúdio..."
+        [debounce]="100"
+        (ionInput)="onSearch($event)"
+      />
+      <ion-button
+        class="filter-toggle"
+        color="primary"
+        (click)="toggleFilters()"
+        aria-label="Filtros avançados"
+      >
+        <ion-icon
+          slot="start"
+          [name]="filtersOpen() ? 'chevron-up-outline' : 'chevron-down-outline'"
+        />
+        {{ filtersOpen() ? 'Ocultar' : 'Filtros' }}
+        @if (activeFilterCount() > 0) {
+          <ion-badge class="filter-toggle__count">{{ activeFilterCount() }}</ion-badge>
+        }
+      </ion-button>
+    </div>
+  </ion-toolbar>
+
+  @if (filtersOpen()) {
+    <div class="filters-panel">
+      <div class="filter-grid">
+        <button type="button" class="filter-trigger" (click)="openPicker('generos')">
+          <span class="filter-trigger__label">Gêneros</span>
+          <span class="filter-trigger__value">
+            {{ summarize('generos') }}
+            <ion-icon name="chevron-forward-outline" />
+          </span>
+        </button>
+
+        <button type="button" class="filter-trigger" (click)="openPicker('estudios')">
+          <span class="filter-trigger__label">Estúdios</span>
+          <span class="filter-trigger__value">
+            {{ summarize('estudios') }}
+            <ion-icon name="chevron-forward-outline" />
+          </span>
+        </button>
+
+        <button type="button" class="filter-trigger" (click)="openPicker('plataformas')">
+          <span class="filter-trigger__label">Onde ver</span>
+          <span class="filter-trigger__value">
+            {{ summarize('plataformas') }}
+            <ion-icon name="chevron-forward-outline" />
+          </span>
+        </button>
+
+        <ion-select
+          class="filter-select"
+          label="Classificação"
+          labelPlacement="stacked"
+          fill="solid"
+          placeholder="Todas"
+          multiple
+          [value]="filters().classificacoes"
+          (ionChange)="onClassificacoesChange($event)"
+        >
+          @for (c of availableClassificacoes(); track c) {
+            <ion-select-option [value]="c">{{ classificacaoLabel(c) }}</ion-select-option>
+          }
+        </ion-select>
+
+        <ion-select
+          class="filter-select"
+          label="Prioridade"
+          labelPlacement="stacked"
+          fill="solid"
+          placeholder="Todas"
+          multiple
+          [value]="filters().prioridades"
+          (ionChange)="onPrioridadesChange($event)"
+        >
+          @for (r of availablePrioridades(); track r) {
+            <ion-select-option [value]="r">{{ recomendacaoLabel(r) }}</ion-select-option>
+          }
+        </ion-select>
+
+        <ion-select
+          class="filter-select"
+          label="Ordenar por"
+          labelPlacement="stacked"
+          fill="solid"
+          [value]="sortBy()"
+          (ionChange)="onSortChange($event)"
+        >
+          @for (option of sortOptions; track option.value) {
+            <ion-select-option [value]="option.value">{{ option.label }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
+
+      <div class="filters-actions">
+        <ion-button
+          fill="clear"
+          size="small"
+          (click)="clearFilters()"
+          [disabled]="activeFilterCount() === 0"
+        >
+          <ion-icon slot="start" name="close-outline" />
+          Limpar filtros
+        </ion-button>
+      </div>
+    </div>
+  }
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="grade">
+    @for (anime of filtered(); track anime.id) {
+      <app-anime-cover [anime]="anime" (select)="openDetail($event)" />
+    } @empty {
+      @if (query().trim() || activeFilterCount() > 0) {
+        <p class="empty">Nenhum anime corresponde aos filtros atuais.</p>
+      } @else {
+        <p class="empty">Nenhum anime carregado.</p>
+      }
+    }
   </div>
 </ion-content>

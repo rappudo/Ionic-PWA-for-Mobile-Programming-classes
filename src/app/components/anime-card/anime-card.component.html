@@ -1,0 +1,51 @@
+<ion-card button="true" (click)="onSelect()">
+  @if (anime().imagem; as src) {
+    <ion-img class="capa" [src]="src" [alt]="tituloPrincipal()" />
+  }
+
+  <ion-card-header>
+    <div class="badges">
+      <ion-badge [color]="recomendacaoMeta().color">
+        {{ recomendacaoMeta().label }}
+      </ion-badge>
+      @if (anime().classificacaoIndicativa; as faixa) {
+        <ion-badge color="dark">{{ faixa }}</ion-badge>
+      }
+    </div>
+
+    <ion-card-title>{{ tituloPrincipal() }}</ion-card-title>
+
+    @if (titulosAlternativos().length) {
+      <ion-card-subtitle>
+        {{ titulosAlternativos().join(' · ') }}
+      </ion-card-subtitle>
+    }
+  </ion-card-header>
+
+  <ion-card-content>
+    <p class="sinopse">{{ anime().sinopse }}</p>
+
+    <dl class="ficha">
+      <div><dt>Temporadas</dt><dd>{{ anime().temporadas }}</dd></div>
+      <div><dt>Filmes</dt><dd>{{ anime().filmes }}</dd></div>
+      <div><dt>Episódios</dt><dd>{{ anime().episodios }}</dd></div>
+      <div><dt>Dublado</dt><dd>{{ anime().porcentagemDublado }}%</dd></div>
+    </dl>
+
+    @if (anime().generos.length) {
+      <div class="chips">
+        @for (g of anime().generos; track g) {
+          <ion-chip color="tertiary"><ion-label>{{ g }}</ion-label></ion-chip>
+        }
+      </div>
+    }
+
+    @if (anime().ondeVer.length) {
+      <div class="chips">
+        @for (plat of anime().ondeVer; track plat) {
+          <ion-chip color="secondary" outline="true"><ion-label>{{ plat }}</ion-label></ion-chip>
+        }
+      </div>
+    }
+  </ion-card-content>
+</ion-card>

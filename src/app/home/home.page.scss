@@ -1,27 +1,115 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 12px;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+
+  &__bar {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
+.filter-toggle {
+  flex: 0 0 auto;
   margin: 0;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --border-radius: 8px;
+  height: 40px;
+  min-width: 110px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+
+  &__count {
+    margin-inline-start: 6px;
+    --background: rgba(255, 255, 255, 0.25);
+    --color: #fff;
+    --padding-start: 6px;
+    --padding-end: 6px;
+    font-size: 0.7rem;
+  }
 }
 
-#container a {
-  text-decoration: none;
+.filters-panel {
+  background: var(--ion-toolbar-background, var(--ion-background-color));
+  border-top: 1px solid var(--ion-color-step-150, rgba(0, 0, 0, 0.08));
+  padding: 12px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.filter-trigger {
+  appearance: none;
+  background: var(--ion-color-step-100, rgba(0, 0, 0, 0.04));
+  border: 1px solid var(--ion-color-step-200, rgba(0, 0, 0, 0.08));
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 56px;
+  transition: background 120ms ease;
+
+  &:hover {
+    background: var(--ion-color-step-150, rgba(0, 0, 0, 0.06));
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    color: var(--ion-color-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.92rem;
+
+    ion-icon {
+      color: var(--ion-color-medium);
+      font-size: 1rem;
+    }
+  }
+}
+
+.filter-select {
+  --background: var(--ion-color-step-100, rgba(0, 0, 0, 0.04));
+  --border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  min-height: 56px;
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--ion-color-medium);
+  margin: 32px 0;
 }
