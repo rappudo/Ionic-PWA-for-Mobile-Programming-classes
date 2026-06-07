@@ -17,7 +17,7 @@ export class AnimeCoverComponent {
   readonly select = output<Anime>();
 
   readonly tituloPrincipal = computed<string>(() => this.anime().nome[0]);
-  readonly borderColor = computed<string>(
+  readonly accentColor = computed<string>(
     () => `var(--ion-color-${RECOMENDACAO_META[this.anime().recomendacao].color})`,
   );
 

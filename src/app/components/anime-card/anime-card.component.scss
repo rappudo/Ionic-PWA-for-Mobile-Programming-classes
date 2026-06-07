@@ -1,44 +1,96 @@
 :host {
   display: block;
+  height: 100%;
 }
 
-ion-card {
-  margin: 16px auto;
-  max-width: 560px;
-  width: calc(100% - 24px);
+.detail {
+  width: 100%;
+  height: 100%;
+  background: var(--ion-card-background, var(--ion-background-color));
+  color: var(--ion-text-color);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.detail__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--ion-color-step-100, rgba(0, 0, 0, 0.04));
+  min-height: 240px;
+  max-height: 55vh;
 }
 
 .capa {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 3 / 4;
-  max-height: 60vh;
+  height: 100%;
   object-fit: cover;
 }
 
-ion-card-header {
-  padding-top: 16px;
+.capa-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--ion-color-medium);
+}
+
+.detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  min-width: 0;
+}
+
+.detail__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail__title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.detail__subtitle {
+  margin: 0;
+  color: var(--ion-color-medium);
+  font-size: 0.95rem;
+}
+
+.detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .badges {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 8px;
 }
 
 .sinopse {
-  margin: 0 0 12px;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
 }
 
 .ficha {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px 16px;
-  margin: 0 0 12px;
+  margin: 0;
 
   > div {
     display: flex;
@@ -61,9 +113,28 @@ ion-card-header {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-bottom: 8px;
+}
 
-  &:last-child {
-    margin-bottom: 0;
+@media (min-width: 768px) {
+  .detail {
+    grid-template-columns: minmax(320px, 440px) 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .detail__media {
+    max-height: none;
+  }
+
+  .detail__info {
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .detail__title {
+    font-size: 1.85rem;
+  }
+
+  .sinopse {
+    font-size: 1rem;
   }
 }

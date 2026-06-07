@@ -4,19 +4,57 @@
 
 .cover {
   appearance: none;
-  background: none;
+  background: transparent;
+  border: 0;
   padding: 0;
   width: 100%;
-  aspect-ratio: 2 / 3;
-  border: 3px solid var(--border-color, var(--ion-color-medium));
-  border-radius: 8px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   cursor: pointer;
-  transition: transform 120ms ease;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  transition: transform var(--md-duration) var(--md-ease);
+
+  &:hover {
+    transform: translateY(-2px);
+
+    .cover__media {
+      box-shadow: var(--md-shadow-3);
+      border-color: var(--accent, var(--md-border-strong));
+    }
+
+    .cover__title {
+      color: var(--md-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    .cover__media {
+      box-shadow: 0 0 0 2px var(--md-primary), var(--md-shadow-2);
+      border-color: var(--md-primary);
+    }
+  }
 
   &:active {
-    transform: scale(0.97);
+    transform: translateY(0) scale(0.98);
   }
+}
+
+.cover__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--md-radius);
+  overflow: hidden;
+  background: var(--md-surface-2);
+  border: 1px solid var(--md-border);
+  box-shadow: var(--md-shadow-1);
+  transition: box-shadow var(--md-duration) var(--md-ease),
+    border-color var(--md-duration) var(--md-ease);
 }
 
 ion-img {
@@ -28,16 +66,53 @@ ion-img::part(image) {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.placeholder {
+.cover__placeholder {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
   padding: 8px;
   text-align: center;
-  color: var(--ion-color-medium);
-  font-size: 0.85rem;
+  color: var(--md-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.cover__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent, transparent);
+}
+
+.cover__shade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+  opacity: 0;
+  transition: opacity var(--md-duration) var(--md-ease);
+  pointer-events: none;
+}
+
+.cover:hover .cover__shade {
+  opacity: 1;
+}
+
+.cover__title {
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--md-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color var(--md-duration) var(--md-ease);
 }

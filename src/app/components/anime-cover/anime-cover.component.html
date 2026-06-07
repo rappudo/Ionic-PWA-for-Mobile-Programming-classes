@@ -1,13 +1,18 @@
 <button
   type="button"
   class="cover"
-  [style.--border-color]="borderColor()"
+  [style.--accent]="accentColor()"
   [attr.aria-label]="tituloPrincipal()"
   (click)="onSelect()"
 >
-  @if (anime().imagem; as src) {
-    <ion-img [src]="src" [alt]="tituloPrincipal()" />
-  } @else {
-    <span class="placeholder">{{ tituloPrincipal() }}</span>
-  }
+  <span class="cover__media">
+    @if (anime().imagem; as src) {
+      <ion-img [src]="src" [alt]="tituloPrincipal()" />
+    } @else {
+      <span class="cover__placeholder">{{ tituloPrincipal() }}</span>
+    }
+    <span class="cover__accent" aria-hidden="true"></span>
+    <span class="cover__shade" aria-hidden="true"></span>
+  </span>
+  <span class="cover__title">{{ tituloPrincipal() }}</span>
 </button>

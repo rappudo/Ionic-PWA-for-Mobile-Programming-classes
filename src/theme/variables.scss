@@ -1,2 +1,100 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// MangaDex-inspired baseline palette.
+// Tokens are namespaced with --md-* and bridged into Ionic CSS vars below.
+
+:root {
+  --md-bg: #1a1a1d;
+  --md-surface: #25252a;
+  --md-surface-2: #2f2f35;
+  --md-surface-3: #3a3a42;
+  --md-border: rgba(255, 255, 255, 0.06);
+  --md-border-strong: rgba(255, 255, 255, 0.14);
+
+  --md-text: #f5f5f7;
+  --md-text-muted: #a8a8b0;
+  --md-text-dim: #6e6e78;
+
+  --md-primary: #ff6740;
+  --md-primary-hover: #ff7f5c;
+  --md-primary-soft: rgba(255, 103, 64, 0.14);
+
+  --md-success: #34d399;
+  --md-warning: #fbbf24;
+  --md-info: #60a5fa;
+  --md-danger: #f87171;
+
+  --md-radius-sm: 4px;
+  --md-radius: 6px;
+  --md-radius-lg: 12px;
+
+  --md-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --md-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --md-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+
+  --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --md-duration: 180ms;
+}
+
+// Bridge into Ionic. dark.always.css is imported in global.scss so we override on top.
+:root {
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --ion-background-color: var(--md-bg);
+  --ion-background-color-rgb: 26, 26, 29;
+
+  --ion-text-color: var(--md-text);
+  --ion-text-color-rgb: 245, 245, 247;
+
+  --ion-card-background: var(--md-surface);
+  --ion-toolbar-background: var(--md-bg);
+  --ion-toolbar-border-color: var(--md-border);
+  --ion-item-background: var(--md-surface);
+
+  // Steps reuse our surface tokens so Ionic internals blend in.
+  --ion-color-step-50: #1f1f23;
+  --ion-color-step-100: #232328;
+  --ion-color-step-150: #27272c;
+  --ion-color-step-200: #2c2c32;
+  --ion-color-step-250: #313137;
+  --ion-color-step-300: #36363c;
+  --ion-color-step-350: #3a3a42;
+  --ion-color-step-400: #404048;
+  --ion-color-step-500: #50505a;
+  --ion-color-step-600: #707078;
+  --ion-color-step-700: #8a8a92;
+  --ion-color-step-800: #a8a8b0;
+  --ion-color-step-900: #d0d0d6;
+
+  // Brand: orange.
+  --ion-color-primary: var(--md-primary);
+  --ion-color-primary-rgb: 255, 103, 64;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #e05a39;
+  --ion-color-primary-tint: var(--md-primary-hover);
+
+  --ion-color-success: var(--md-success);
+  --ion-color-success-rgb: 52, 211, 153;
+  --ion-color-success-contrast: #0b1f17;
+  --ion-color-success-contrast-rgb: 11, 31, 23;
+  --ion-color-success-shade: #2eb988;
+  --ion-color-success-tint: #4cd9a4;
+
+  --ion-color-warning: var(--md-warning);
+  --ion-color-warning-rgb: 251, 191, 36;
+  --ion-color-warning-contrast: #1f1604;
+  --ion-color-warning-contrast-rgb: 31, 22, 4;
+  --ion-color-warning-shade: #dda820;
+  --ion-color-warning-tint: #fbc53a;
+
+  --ion-color-medium: var(--md-text-muted);
+  --ion-color-medium-rgb: 168, 168, 176;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #8c8c93;
+  --ion-color-medium-tint: #b4b4bb;
+
+  --ion-color-dark: #0f0f12;
+  --ion-color-dark-rgb: 15, 15, 18;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+}

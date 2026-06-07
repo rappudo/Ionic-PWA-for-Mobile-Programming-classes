@@ -231,6 +231,7 @@ export class HomePage {
     const modal = await this.modalCtrl.create({
       component: AnimeDetailModalComponent,
       componentProps: { anime },
+      cssClass: 'anime-detail-modal',
     });
     await modal.present();
   }
