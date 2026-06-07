@@ -13,6 +13,25 @@ ion-title {
   letter-spacing: -0.01em;
 }
 
+.theme-toggle {
+  --color: var(--md-text);
+  --color-hover: var(--md-primary);
+  --background-hover: var(--md-surface-2);
+  --border-radius: var(--md-radius);
+  margin-inline-end: 4px;
+
+  ion-icon {
+    font-size: 1.25rem;
+    transition: transform var(--md-duration) var(--md-ease),
+      color var(--md-duration) var(--md-ease);
+  }
+
+  &:hover ion-icon {
+    transform: rotate(20deg);
+    color: var(--md-primary);
+  }
+}
+
 ion-searchbar.search-row__bar {
   --background: var(--md-surface);
   --color: var(--md-text);
@@ -54,6 +73,15 @@ ion-searchbar.search-row__bar {
   text-transform: none;
   letter-spacing: 0;
 
+  &__chevron {
+    transition: transform 260ms var(--md-ease);
+    transform-origin: center;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
   &__count {
     margin-inline-start: 6px;
     --background: rgba(255, 255, 255, 0.22);
@@ -65,12 +93,44 @@ ion-searchbar.search-row__bar {
 }
 
 // Filters panel ------------------------------------------------------------
+// Animated open/close via grid-template-rows: 0fr -> 1fr, which lets the
+// browser animate to the body's actual height instead of a guessed max-height.
 .filters-panel {
   background: var(--md-bg);
-  border-top: 1px solid var(--md-border);
+  display: grid;
+  grid-template-rows: 0fr;
+  border-top: 1px solid transparent;
+  transition: grid-template-rows 280ms var(--md-ease),
+    border-top-color 200ms var(--md-ease);
+
+  &--open {
+    grid-template-rows: 1fr;
+    border-top-color: var(--md-border);
+  }
+}
+
+.filters-panel__body {
+  overflow: hidden;
+  padding: 0 12px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: padding 280ms var(--md-ease),
+    opacity 220ms var(--md-ease) 60ms,
+    transform 280ms var(--md-ease);
+}
+
+.filters-panel--open .filters-panel__body {
   padding: 14px 12px 16px;
-  max-height: 60vh;
-  overflow-y: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter-toggle__chevron,
+  .filters-panel,
+  .filters-panel__body {
+    transition: none;
+  }
 }
 
 .filter-grid {

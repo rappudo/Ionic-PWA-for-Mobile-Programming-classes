@@ -26,13 +26,10 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * Force dark always so the MangaDex-style palette in theme/variables.scss
- * is the canonical look.
+ * Theme tokens. Dark/light are scoped under body.theme-dark / body.theme-light
+ * so we don't pull Ionic's dark.always.css, which would force dark colors
+ * onto components that we want to switch to light.
  */
-@import '@ionic/angular/css/palettes/dark.always.css';
-
 @import './theme/variables.scss';
 
 html,

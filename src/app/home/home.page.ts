@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   IonBadge,
   IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
@@ -18,8 +19,9 @@ import { addIcons } from 'ionicons';
 import {
   chevronDownOutline,
   chevronForwardOutline,
-  chevronUpOutline,
   closeOutline,
+  moonOutline,
+  sunnyOutline,
 } from 'ionicons/icons';
 
 import { AnimeCoverComponent } from '../components/anime-cover/anime-cover.component';
@@ -29,6 +31,7 @@ import { Anime, ClassificacaoIndicativa, Recomendacao } from '../models/anime';
 import { RECOMENDACAO_META } from '../models/recomendacao';
 import { buildHaystack, matchesQuery } from '../services/anime-search';
 import { AnimeService } from '../services/anime.service';
+import { ThemeService } from '../services/theme.service';
 
 interface IndexedAnime {
   readonly anime: Anime;
@@ -94,6 +97,7 @@ function uniqueSorted(values: readonly string[]): string[] {
     AnimeCoverComponent,
     IonBadge,
     IonButton,
+    IonButtons,
     IonContent,
     IonHeader,
     IonIcon,
@@ -106,6 +110,9 @@ function uniqueSorted(values: readonly string[]): string[] {
 })
 export class HomePage {
   private readonly modalCtrl = inject(ModalController);
+  private readonly themeService = inject(ThemeService);
+
+  readonly theme = this.themeService.theme;
 
   readonly query = signal('');
   readonly sortBy = signal<SortKey>('recomendacao');
@@ -172,13 +179,18 @@ export class HomePage {
     addIcons({
       'chevron-down-outline': chevronDownOutline,
       'chevron-forward-outline': chevronForwardOutline,
-      'chevron-up-outline': chevronUpOutline,
       'close-outline': closeOutline,
+      'moon-outline': moonOutline,
+      'sunny-outline': sunnyOutline,
     });
   }
 
   onSearch(event: SearchbarCustomEvent): void {
     this.query.set(event.detail.value ?? '');
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggle();
   }
 
   toggleFilters(): void {

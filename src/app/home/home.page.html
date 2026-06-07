@@ -1,6 +1,18 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Animes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        class="theme-toggle"
+        (click)="toggleTheme()"
+        [attr.aria-label]="theme() === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
+      >
+        <ion-icon
+          slot="icon-only"
+          [name]="theme() === 'dark' ? 'sunny-outline' : 'moon-outline'"
+        />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
     <div class="search-row">
@@ -15,10 +27,13 @@
         color="primary"
         (click)="toggleFilters()"
         aria-label="Filtros avançados"
+        [attr.aria-expanded]="filtersOpen()"
       >
         <ion-icon
           slot="start"
-          [name]="filtersOpen() ? 'chevron-up-outline' : 'chevron-down-outline'"
+          name="chevron-down-outline"
+          class="filter-toggle__chevron"
+          [class.filter-toggle__chevron--open]="filtersOpen()"
         />
         {{ filtersOpen() ? 'Ocultar' : 'Filtros' }}
         @if (activeFilterCount() > 0) {
@@ -28,8 +43,12 @@
     </div>
   </ion-toolbar>
 
-  @if (filtersOpen()) {
-    <div class="filters-panel">
+  <div
+    class="filters-panel"
+    [class.filters-panel--open]="filtersOpen()"
+    [attr.aria-hidden]="!filtersOpen()"
+  >
+    <div class="filters-panel__body">
       <div class="filter-grid">
         <button type="button" class="filter-trigger" (click)="openPicker('generos')">
           <span class="filter-trigger__label">Gêneros</span>
@@ -111,7 +130,7 @@
         </ion-button>
       </div>
     </div>
-  }
+  </div>
 </ion-header>
 
 <ion-content [fullscreen]="true">

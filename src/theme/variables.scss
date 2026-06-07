@@ -1,7 +1,90 @@
-// MangaDex-inspired baseline palette.
-// Tokens are namespaced with --md-* and bridged into Ionic CSS vars below.
+// Theme baseline.
+// :root holds invariants (typography, radii, easing, the priority scale).
+// body.theme-dark / body.theme-light flip the palette. ThemeService toggles
+// the class on <body>; the inline bootstrap script in index.html sets it
+// before Angular renders so there is no flash of incorrect colors.
 
 :root {
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --md-radius-sm: 4px;
+  --md-radius: 6px;
+  --md-radius-lg: 12px;
+
+  --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --md-duration: 180ms;
+
+  // Priority scale (blue → green → yellow → black, highest to lowest).
+  // Shared across themes; only --ion-color-prio-low changes for light mode.
+  --ion-color-prio-best: #3b82f6;
+  --ion-color-prio-best-rgb: 59, 130, 246;
+  --ion-color-prio-best-contrast: #ffffff;
+  --ion-color-prio-best-contrast-rgb: 255, 255, 255;
+  --ion-color-prio-best-shade: #346fd8;
+  --ion-color-prio-best-tint: #5391f7;
+
+  --ion-color-prio-good: #22c55e;
+  --ion-color-prio-good-rgb: 34, 197, 94;
+  --ion-color-prio-good-contrast: #0a1b11;
+  --ion-color-prio-good-contrast-rgb: 10, 27, 17;
+  --ion-color-prio-good-shade: #1eac52;
+  --ion-color-prio-good-tint: #38cb6e;
+
+  --ion-color-prio-mid: #eab308;
+  --ion-color-prio-mid-rgb: 234, 179, 8;
+  --ion-color-prio-mid-contrast: #1f1604;
+  --ion-color-prio-mid-contrast-rgb: 31, 22, 4;
+  --ion-color-prio-mid-shade: #ce9e07;
+  --ion-color-prio-mid-tint: #ecbb21;
+
+  --ion-color-prio-low: #18181b;
+  --ion-color-prio-low-rgb: 24, 24, 27;
+  --ion-color-prio-low-contrast: #f5f5f7;
+  --ion-color-prio-low-contrast-rgb: 245, 245, 247;
+  --ion-color-prio-low-shade: #050507;
+  --ion-color-prio-low-tint: #2f2f33;
+}
+
+.ion-color-prio-best {
+  --ion-color-base: var(--ion-color-prio-best);
+  --ion-color-base-rgb: var(--ion-color-prio-best-rgb);
+  --ion-color-contrast: var(--ion-color-prio-best-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-prio-best-contrast-rgb);
+  --ion-color-shade: var(--ion-color-prio-best-shade);
+  --ion-color-tint: var(--ion-color-prio-best-tint);
+}
+
+.ion-color-prio-good {
+  --ion-color-base: var(--ion-color-prio-good);
+  --ion-color-base-rgb: var(--ion-color-prio-good-rgb);
+  --ion-color-contrast: var(--ion-color-prio-good-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-prio-good-contrast-rgb);
+  --ion-color-shade: var(--ion-color-prio-good-shade);
+  --ion-color-tint: var(--ion-color-prio-good-tint);
+}
+
+.ion-color-prio-mid {
+  --ion-color-base: var(--ion-color-prio-mid);
+  --ion-color-base-rgb: var(--ion-color-prio-mid-rgb);
+  --ion-color-contrast: var(--ion-color-prio-mid-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-prio-mid-contrast-rgb);
+  --ion-color-shade: var(--ion-color-prio-mid-shade);
+  --ion-color-tint: var(--ion-color-prio-mid-tint);
+}
+
+.ion-color-prio-low {
+  --ion-color-base: var(--ion-color-prio-low);
+  --ion-color-base-rgb: var(--ion-color-prio-low-rgb);
+  --ion-color-contrast: var(--ion-color-prio-low-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-prio-low-contrast-rgb);
+  --ion-color-shade: var(--ion-color-prio-low-shade);
+  --ion-color-tint: var(--ion-color-prio-low-tint);
+}
+
+// =========================================================================
+// Dark theme — MangaDex-inspired, orange brand.
+// =========================================================================
+body.theme-dark {
   --md-bg: #1a1a1d;
   --md-surface: #25252a;
   --md-surface-2: #2f2f35;
@@ -17,26 +100,9 @@
   --md-primary-hover: #ff7f5c;
   --md-primary-soft: rgba(255, 103, 64, 0.14);
 
-  --md-success: #34d399;
-  --md-warning: #fbbf24;
-  --md-info: #60a5fa;
-  --md-danger: #f87171;
-
-  --md-radius-sm: 4px;
-  --md-radius: 6px;
-  --md-radius-lg: 12px;
-
   --md-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --md-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
   --md-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
-
-  --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --md-duration: 180ms;
-}
-
-// Bridge into Ionic. dark.always.css is imported in global.scss so we override on top.
-:root {
-  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   --ion-background-color: var(--md-bg);
   --ion-background-color-rgb: 26, 26, 29;
@@ -49,7 +115,6 @@
   --ion-toolbar-border-color: var(--md-border);
   --ion-item-background: var(--md-surface);
 
-  // Steps reuse our surface tokens so Ionic internals blend in.
   --ion-color-step-50: #1f1f23;
   --ion-color-step-100: #232328;
   --ion-color-step-150: #27272c;
@@ -64,27 +129,12 @@
   --ion-color-step-800: #a8a8b0;
   --ion-color-step-900: #d0d0d6;
 
-  // Brand: orange.
   --ion-color-primary: var(--md-primary);
   --ion-color-primary-rgb: 255, 103, 64;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
   --ion-color-primary-shade: #e05a39;
   --ion-color-primary-tint: var(--md-primary-hover);
-
-  --ion-color-success: var(--md-success);
-  --ion-color-success-rgb: 52, 211, 153;
-  --ion-color-success-contrast: #0b1f17;
-  --ion-color-success-contrast-rgb: 11, 31, 23;
-  --ion-color-success-shade: #2eb988;
-  --ion-color-success-tint: #4cd9a4;
-
-  --ion-color-warning: var(--md-warning);
-  --ion-color-warning-rgb: 251, 191, 36;
-  --ion-color-warning-contrast: #1f1604;
-  --ion-color-warning-contrast-rgb: 31, 22, 4;
-  --ion-color-warning-shade: #dda820;
-  --ion-color-warning-tint: #fbc53a;
 
   --ion-color-medium: var(--md-text-muted);
   --ion-color-medium-rgb: 168, 168, 176;
@@ -97,4 +147,80 @@
   --ion-color-dark-rgb: 15, 15, 18;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
+}
+
+// =========================================================================
+// Light theme — white surfaces, blue brand.
+// =========================================================================
+body.theme-light {
+  --md-bg: #f6f7fb;
+  --md-surface: #ffffff;
+  --md-surface-2: #eef0f5;
+  --md-surface-3: #dde0e8;
+  --md-border: rgba(15, 23, 42, 0.08);
+  --md-border-strong: rgba(15, 23, 42, 0.18);
+
+  --md-text: #0f172a;
+  --md-text-muted: #475569;
+  --md-text-dim: #94a3b8;
+
+  --md-primary: #2563eb;
+  --md-primary-hover: #1d4ed8;
+  --md-primary-soft: rgba(37, 99, 235, 0.12);
+
+  --md-shadow-1: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --md-shadow-2: 0 4px 12px rgba(15, 23, 42, 0.1);
+  --md-shadow-3: 0 8px 24px rgba(15, 23, 42, 0.14),
+    0 2px 6px rgba(15, 23, 42, 0.08);
+
+  --ion-background-color: var(--md-bg);
+  --ion-background-color-rgb: 246, 247, 251;
+
+  --ion-text-color: var(--md-text);
+  --ion-text-color-rgb: 15, 23, 42;
+
+  --ion-card-background: var(--md-surface);
+  --ion-toolbar-background: var(--md-surface);
+  --ion-toolbar-border-color: var(--md-border);
+  --ion-item-background: var(--md-surface);
+
+  --ion-color-step-50: #fafbfd;
+  --ion-color-step-100: #f1f3f8;
+  --ion-color-step-150: #e8ebf1;
+  --ion-color-step-200: #dde1ea;
+  --ion-color-step-250: #d3d7e1;
+  --ion-color-step-300: #c5cad6;
+  --ion-color-step-350: #b3b9c8;
+  --ion-color-step-400: #97a0b3;
+  --ion-color-step-500: #7a8499;
+  --ion-color-step-600: #5b6679;
+  --ion-color-step-700: #41495a;
+  --ion-color-step-800: #2a303d;
+  --ion-color-step-900: #131722;
+
+  --ion-color-primary: var(--md-primary);
+  --ion-color-primary-rgb: 37, 99, 235;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1f54c8;
+  --ion-color-primary-tint: var(--md-primary-hover);
+
+  --ion-color-medium: var(--md-text-muted);
+  --ion-color-medium-rgb: 71, 85, 105;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #3f4a5d;
+  --ion-color-medium-tint: #586378;
+
+  --ion-color-dark: #0f172a;
+  --ion-color-dark-rgb: 15, 23, 42;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+
+  // Re-tone the "low" tier so it reads as muted-dark rather than near-black
+  // against a white background.
+  --ion-color-prio-low: #334155;
+  --ion-color-prio-low-rgb: 51, 65, 85;
+  --ion-color-prio-low-shade: #28324a;
+  --ion-color-prio-low-tint: #475569;
 }

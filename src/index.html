@@ -26,7 +26,19 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 </head>
 
-<body>
+<body class="theme-dark">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('app:theme');
+        var theme = stored === 'light' ? 'light' : 'dark';
+        document.body.classList.remove('theme-dark', 'theme-light');
+        document.body.classList.add('theme-' + theme);
+      } catch (e) {
+        document.body.classList.add('theme-dark');
+      }
+    })();
+  </script>
   <app-root></app-root>
 </body>
 
