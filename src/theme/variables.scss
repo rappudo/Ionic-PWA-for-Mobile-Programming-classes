@@ -14,21 +14,20 @@
   --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --md-duration: 180ms;
 
-  // Priority scale (blue → green → yellow → black, highest to lowest).
-  // Shared across themes; only --ion-color-prio-low changes for light mode.
-  --ion-color-prio-best: #3b82f6;
-  --ion-color-prio-best-rgb: 59, 130, 246;
+  // Priority scale (blue → green → yellow → orange, highest to lowest).
+  --ion-color-prio-best: #2563eb;
+  --ion-color-prio-best-rgb: 37, 99, 235;
   --ion-color-prio-best-contrast: #ffffff;
   --ion-color-prio-best-contrast-rgb: 255, 255, 255;
-  --ion-color-prio-best-shade: #346fd8;
-  --ion-color-prio-best-tint: #5391f7;
+  --ion-color-prio-best-shade: #1d4ed8;
+  --ion-color-prio-best-tint: #3b82f6;
 
-  --ion-color-prio-good: #22c55e;
-  --ion-color-prio-good-rgb: 34, 197, 94;
-  --ion-color-prio-good-contrast: #0a1b11;
-  --ion-color-prio-good-contrast-rgb: 10, 27, 17;
-  --ion-color-prio-good-shade: #1eac52;
-  --ion-color-prio-good-tint: #38cb6e;
+  --ion-color-prio-good: #16a34a;
+  --ion-color-prio-good-rgb: 22, 163, 74;
+  --ion-color-prio-good-contrast: #ffffff;
+  --ion-color-prio-good-contrast-rgb: 255, 255, 255;
+  --ion-color-prio-good-shade: #15803d;
+  --ion-color-prio-good-tint: #22c55e;
 
   --ion-color-prio-mid: #eab308;
   --ion-color-prio-mid-rgb: 234, 179, 8;
@@ -37,12 +36,12 @@
   --ion-color-prio-mid-shade: #ce9e07;
   --ion-color-prio-mid-tint: #ecbb21;
 
-  --ion-color-prio-low: #18181b;
-  --ion-color-prio-low-rgb: 24, 24, 27;
-  --ion-color-prio-low-contrast: #f5f5f7;
-  --ion-color-prio-low-contrast-rgb: 245, 245, 247;
-  --ion-color-prio-low-shade: #050507;
-  --ion-color-prio-low-tint: #2f2f33;
+  --ion-color-prio-low: #f97316;
+  --ion-color-prio-low-rgb: 249, 115, 22;
+  --ion-color-prio-low-contrast: #ffffff;
+  --ion-color-prio-low-contrast-rgb: 255, 255, 255;
+  --ion-color-prio-low-shade: #db6510;
+  --ion-color-prio-low-tint: #fb8a3a;
 }
 
 .ion-color-prio-best {
@@ -216,11 +215,4 @@ body.theme-light {
   --ion-color-dark-rgb: 15, 23, 42;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
-
-  // Re-tone the "low" tier so it reads as muted-dark rather than near-black
-  // against a white background.
-  --ion-color-prio-low: #334155;
-  --ion-color-prio-low-rgb: 51, 65, 85;
-  --ion-color-prio-low-shade: #28324a;
-  --ion-color-prio-low-tint: #475569;
 }

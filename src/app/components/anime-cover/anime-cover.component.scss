@@ -22,7 +22,6 @@
 
     .cover__media {
       box-shadow: var(--md-shadow-3);
-      border-color: var(--accent, var(--md-border-strong));
     }
 
     .cover__title {
@@ -35,7 +34,6 @@
 
     .cover__media {
       box-shadow: 0 0 0 2px var(--md-primary), var(--md-shadow-2);
-      border-color: var(--md-primary);
     }
   }
 
@@ -51,10 +49,8 @@
   border-radius: var(--md-radius);
   overflow: hidden;
   background: var(--md-surface-2);
-  border: 1px solid var(--md-border);
   box-shadow: var(--md-shadow-1);
-  transition: box-shadow var(--md-duration) var(--md-ease),
-    border-color var(--md-duration) var(--md-ease);
+  transition: box-shadow var(--md-duration) var(--md-ease);
 }
 
 ion-img {
@@ -87,7 +83,7 @@ ion-img::part(image) {
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
+  height: 7px;
   background: var(--accent, transparent);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
