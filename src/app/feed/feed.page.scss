@@ -1,0 +1,363 @@
+ion-header ion-toolbar {
+  --background: var(--md-bg);
+  --color: var(--md-text);
+  --border-color: var(--md-border);
+}
+
+.feed-content {
+  --background: var(--md-bg);
+}
+
+.feed-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 14px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-empty {
+  margin: 64px 24px;
+  text-align: center;
+  color: var(--md-text-muted);
+}
+
+.inbox-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  &__title {
+    margin: 0;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-primary);
+    font-weight: 700;
+  }
+}
+
+.inbox-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inbox-card {
+  background: var(--md-primary-soft);
+  border: 1px solid var(--md-primary);
+  border-radius: var(--md-radius);
+  padding: 10px 12px;
+  display: flex;
+  gap: 12px;
+
+  &__cover {
+    appearance: none;
+    border: 0;
+    background: var(--md-surface-2);
+    width: 56px;
+    flex: 0 0 auto;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--md-radius-sm);
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--md-text-muted);
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__from {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--md-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__user {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-primary);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__verb {
+    color: var(--md-text-muted);
+  }
+
+  &__title {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-text);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+
+    &:hover {
+      color: var(--md-primary);
+    }
+  }
+
+  &__message {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: var(--md-text);
+    font-style: italic;
+    overflow-wrap: anywhere;
+  }
+
+  &__dismiss {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+
+    ion-icon {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--md-text);
+    }
+  }
+}
+
+.feed-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-item {
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
+  border-radius: var(--md-radius);
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+
+  &__avatar {
+    appearance: none;
+    border: 0;
+    background: var(--md-surface-2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    ion-icon {
+      font-size: 2rem;
+      color: var(--md-text-dim);
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 2px var(--md-primary);
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__line {
+    margin: 0;
+    color: var(--md-text);
+    font-size: 0.92rem;
+    line-height: 1.4;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__user {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-primary);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__verb {
+    color: var(--md-text-muted);
+  }
+
+  &__target {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-text);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+      color: var(--md-primary);
+    }
+
+    &--static {
+      cursor: default;
+
+      &:hover {
+        color: var(--md-text);
+      }
+
+      ion-icon {
+        color: var(--md-text-muted);
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &__chip {
+    background: var(--chip-color, var(--md-surface-3));
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    ion-icon {
+      font-size: 0.85rem;
+    }
+
+    &--score {
+      background: var(--md-score);
+      color: var(--md-score-contrast);
+    }
+  }
+
+  &__heart {
+    color: var(--md-primary);
+    font-size: 1rem;
+  }
+
+  &__thread-btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--md-text-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: var(--md-radius-sm);
+    display: inline-flex;
+    align-items: center;
+
+    ion-icon {
+      font-size: 1.05rem;
+    }
+
+    &:hover {
+      color: var(--md-primary);
+      background: var(--md-primary-soft);
+    }
+  }
+
+  &__comment {
+    margin: 4px 0 0;
+    padding: 8px 10px;
+    background: var(--md-surface-2);
+    border-left: 3px solid var(--md-primary);
+    border-radius: var(--md-radius-sm);
+    color: var(--md-text);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  &__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--md-text-dim);
+    font-size: 0.78rem;
+
+    ion-icon {
+      font-size: 0.85rem;
+    }
+  }
+}

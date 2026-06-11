@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ list()?.name ?? 'Lista compartilhada' }}</ion-title>
+    <div slot="end">
+      <ion-button fill="clear" (click)="goToApp()">
+        @if (isAuthenticated()) {
+          <ion-icon slot="start" name="home-outline" />
+          App
+        } @else {
+          <ion-icon slot="start" name="log-in-outline" />
+          Entrar
+        }
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="shared-content">
+  @if (loading()) {
+    <app-skeleton-grid [count]="12" />
+  } @else if (notFound()) {
+    <div class="shared-empty">
+      <h2>Lista não encontrada</h2>
+      <p>O link pode estar errado ou a lista foi tornada privada.</p>
+      <ion-button (click)="goToApp()" class="shared-empty__btn">
+        Ir pro app
+      </ion-button>
+    </div>
+  } @else {
+    <div class="shared-wrap">
+      @if (owner(); as o) {
+        <button type="button" class="shared-owner" (click)="openOwnerProfile()">
+          <div class="shared-owner__avatar">
+            @if (o.avatar_url; as url) {
+              <img [src]="url" [alt]="o.username" />
+            } @else {
+              <ion-icon name="person-circle-outline" />
+            }
+          </div>
+          <div class="shared-owner__body">
+            <span class="shared-owner__label">Lista de</span>
+            <span class="shared-owner__name">{{ '@' + o.username }}</span>
+          </div>
+          @if (items().length > 0) {
+            <span class="shared-owner__count">
+              {{ items().length }} {{ items().length === 1 ? 'anime' : 'animes' }}
+            </span>
+          }
+        </button>
+      }
+
+      @if (items().length === 0) {
+        <p class="shared-empty-list">Esta lista ainda está vazia.</p>
+      } @else {
+        <div class="grade">
+          @for (anime of items(); track anime.id) {
+            <app-anime-cover [anime]="anime" (select)="openAnime($event)" />
+          }
+        </div>
+      }
+    </div>
+  }
+</ion-content>

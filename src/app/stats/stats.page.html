@@ -1,0 +1,158 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profile" />
+    </ion-buttons>
+    <ion-title>Estatísticas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="stats-content">
+  <div class="stats-wrap">
+    <a class="stats-wrapped" routerLink="/year-in-review">
+      <div class="stats-wrapped__icon">
+        <ion-icon name="sparkles-outline" aria-hidden="true" />
+      </div>
+      <div class="stats-wrapped__body">
+        <span class="stats-wrapped__title">Sua retrospectiva {{ currentYear }}</span>
+        <span class="stats-wrapped__sub">Resumo do seu ano em animes</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="stats-wrapped__chevron" aria-hidden="true" />
+    </a>
+
+    <section class="stats-overview">
+      <div class="stats-overview__card">
+        <ion-icon name="tv-outline" />
+        <span class="stats-overview__value">{{ watchTime().primary }}</span>
+        <span class="stats-overview__label">assistidos</span>
+      </div>
+      <div class="stats-overview__card">
+        <ion-icon name="stats-chart-outline" />
+        <span class="stats-overview__value">
+          @if (averageScore() !== null) {
+            {{ averageScore() | number: '1.1-1' }}
+          } @else {
+            —
+          }
+        </span>
+        <span class="stats-overview__label">nota média</span>
+      </div>
+      <div class="stats-overview__card">
+        <ion-icon name="bar-chart-outline" />
+        <span class="stats-overview__value">{{ totalRated() }}</span>
+        <span class="stats-overview__label">avaliados</span>
+      </div>
+    </section>
+
+    <section class="stats-card">
+      <h2 class="stats-card__title">Distribuição de notas</h2>
+      @if (totalRated() === 0) {
+        <p class="stats-empty">Você ainda não avaliou nada.</p>
+      } @else {
+        <div class="score-chart">
+          @for (bar of scoreBars(); track bar.score) {
+            <div class="score-bar">
+              <div
+                class="score-bar__fill"
+                [style.height.%]="bar.height"
+                [title]="bar.count + ' avaliações com nota ' + bar.score"
+              >
+                @if (bar.count > 0) {
+                  <span class="score-bar__count">{{ bar.count }}</span>
+                }
+              </div>
+              <span class="score-bar__label">{{ bar.score }}</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="stats-card">
+      <h2 class="stats-card__title">Por status</h2>
+      @if (totalStatus() === 0) {
+        <p class="stats-empty">Você ainda não marcou status em nenhum anime.</p>
+      } @else {
+        <div class="status-chart">
+          <div class="status-donut" [style.background]="donutGradient()">
+            <div class="status-donut__hole">
+              <span class="status-donut__total">{{ totalStatus() }}</span>
+              <span class="status-donut__label">animes</span>
+            </div>
+          </div>
+          <ul class="status-legend">
+            @for (slice of statusSlices(); track slice.status) {
+              @if (slice.count > 0) {
+                <li class="status-legend__row">
+                  <span class="status-legend__swatch" [style.background]="slice.color"></span>
+                  <span class="status-legend__label">{{ slice.label }}</span>
+                  <span class="status-legend__count">{{ slice.count }}</span>
+                </li>
+              }
+            }
+          </ul>
+        </div>
+      }
+    </section>
+
+    <section class="stats-card">
+      <h2 class="stats-card__title">Concluídos por mês</h2>
+      <div class="month-chart">
+        @for (m of monthBars(); track m.key) {
+          <div class="month-bar">
+            <div class="month-bar__fill" [style.height.%]="m.height" [title]="m.count + ' em ' + m.label">
+              @if (m.count > 0) {
+                <span class="month-bar__count">{{ m.count }}</span>
+              }
+            </div>
+            <span class="month-bar__label">{{ m.label }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="stats-card">
+      <h2 class="stats-card__title">Gêneros favoritos</h2>
+      @if (topGenres().length === 0) {
+        <p class="stats-empty">Avalie ou conclua animes pra montar seu top.</p>
+      } @else {
+        <ul class="bar-list">
+          @for (g of topGenres(); track g.name) {
+            <li class="bar-row">
+              <span class="bar-row__name">{{ g.name }}</span>
+              <div class="bar-row__bar">
+                <span
+                  class="bar-row__fill"
+                  [style.width.%]="(g.count / topGenres()[0].count) * 100"
+                ></span>
+              </div>
+              <span class="bar-row__count">{{ g.count }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="stats-card">
+      <h2 class="stats-card__title">Estúdios favoritos</h2>
+      @if (topStudios().length === 0) {
+        <p class="stats-empty">Sem dados ainda.</p>
+      } @else {
+        <ul class="bar-list">
+          @for (s of topStudios(); track s.name) {
+            <li class="bar-row">
+              <span class="bar-row__name">{{ s.name }}</span>
+              <div class="bar-row__bar">
+                <span
+                  class="bar-row__fill"
+                  [style.width.%]="(s.count / topStudios()[0].count) * 100"
+                ></span>
+              </div>
+              <span class="bar-row__count">{{ s.count }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+</ion-content>

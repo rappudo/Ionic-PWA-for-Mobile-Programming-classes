@@ -1,0 +1,74 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Minhas listas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="lists-content">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  <div class="lists-wrap">
+    <form class="lists-create" (ngSubmit)="createList()">
+      <ion-input
+        class="lists-create__input"
+        placeholder="Nome da nova lista (ex: Romance legal)"
+        maxlength="80"
+        [value]="newListName()"
+        (ionInput)="onNameInput($event.detail.value)"
+      />
+      <ion-button
+        type="submit"
+        class="lists-create__btn"
+        [disabled]="!newListName().trim() || creating()"
+      >
+        <ion-icon slot="start" name="add-outline" />
+        Criar
+      </ion-button>
+    </form>
+
+    @if (error(); as message) {
+      <p class="lists-error" role="alert">{{ message }}</p>
+    }
+
+    @if (loading() && lists().length === 0) {
+      <app-skeleton-row [count]="3" [avatar]="false" />
+    } @else if (lists().length === 0) {
+      <p class="lists-empty">Você ainda não tem nenhuma lista.</p>
+    }
+
+    <ul class="lists-grid">
+      @for (list of lists(); track list.id) {
+        <li class="list-card" (click)="open(list.id)">
+          <div class="list-card__body">
+            <h3 class="list-card__name">{{ list.name }}</h3>
+            <p class="list-card__count">
+              {{ list.anime_ids.length }}
+              {{ list.anime_ids.length === 1 ? 'anime' : 'animes' }}
+              @if (list.role === 'collaborator') {
+                <span class="list-card__badge">colaborando</span>
+              }
+            </p>
+          </div>
+          <div class="list-card__actions">
+            @if (list.role === 'owner') {
+              <button
+                type="button"
+                class="list-card__delete"
+                aria-label="Excluir lista"
+                (click)="confirmDelete(list.id, list.name, $event)"
+              >
+                <ion-icon name="trash-outline" />
+              </button>
+            }
+            <ion-icon class="list-card__chevron" name="chevron-forward-outline" />
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</ion-content>

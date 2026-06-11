@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Compartilhar lista</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="share-content">
+  <div class="share-toggle">
+    <div class="share-toggle__label">
+      <span class="share-toggle__title">Tornar pública</span>
+      <span class="share-toggle__sub">Qualquer pessoa com o link pode ver</span>
+    </div>
+    <ion-toggle
+      [checked]="isPublic()"
+      [disabled]="busy()"
+      (ionChange)="togglePublic($event)"
+    />
+  </div>
+
+  @if (isPublic()) {
+    <div class="share-url">
+      <span class="share-url__label">Link</span>
+      <code class="share-url__value">{{ url() }}</code>
+    </div>
+    <div class="share-actions">
+      <ion-button class="share-btn" expand="block" (click)="copyUrl()">
+        @if (copied()) {
+          <ion-icon slot="start" name="checkmark-outline" />
+          Copiado
+        } @else {
+          <ion-icon slot="start" name="copy-outline" />
+          Copiar link
+        }
+      </ion-button>
+      @if (hasNativeShare) {
+        <ion-button class="share-btn" fill="outline" expand="block" (click)="share()">
+          <ion-icon slot="start" name="share-social-outline" />
+          Compartilhar
+        </ion-button>
+      }
+    </div>
+  } @else {
+    <p class="share-hint">
+      Ative pra gerar um link compartilhável. Pode desativar a qualquer momento.
+    </p>
+  }
+</ion-content>

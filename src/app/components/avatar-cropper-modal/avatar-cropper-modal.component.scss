@@ -1,0 +1,72 @@
+ion-header ion-toolbar {
+  --background: var(--md-bg);
+  --color: var(--md-text);
+  --border-color: var(--md-border);
+}
+
+.cropper-content {
+  --background: var(--md-bg);
+}
+
+.cropper-hint {
+  text-align: center;
+  margin: 16px 24px 8px;
+  color: var(--md-text-muted);
+  font-size: 0.88rem;
+}
+
+.cropper-stage {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.cropper-viewport {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  border-radius: var(--md-radius);
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.cropper-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.cropper-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.cropper-controls {
+  max-width: 320px;
+  margin: 12px auto 24px;
+  padding: 0 16px;
+}
+
+.cropper-zoom {
+  --bar-background: var(--md-surface-2);
+  --bar-background-active: var(--md-primary);
+  --knob-background: var(--md-primary);
+
+  span[slot] {
+    color: var(--md-text-muted);
+    font-weight: 700;
+  }
+}

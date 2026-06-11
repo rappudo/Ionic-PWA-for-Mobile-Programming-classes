@@ -32,6 +32,42 @@ ion-title {
   }
 }
 
+.friends-btn {
+  position: relative;
+
+  &__badge {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    --background: var(--md-primary);
+    --color: #fff;
+    --padding-start: 5px;
+    --padding-end: 5px;
+    font-size: 0.62rem;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 999px;
+  }
+}
+
+.profile-btn {
+  --color: var(--md-text);
+  --color-hover: var(--md-primary);
+  --background-hover: var(--md-surface-2);
+  --border-radius: var(--md-radius);
+  margin-inline-end: 4px;
+
+  ion-icon {
+    font-size: 1.4rem;
+  }
+
+  &__avatar {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--md-border-strong);
+  }
+}
+
 ion-searchbar.search-row__bar {
   --background: var(--md-surface);
   --color: var(--md-text);

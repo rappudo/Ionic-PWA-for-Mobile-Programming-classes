@@ -1,0 +1,148 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/recommendations" />
+    </ion-buttons>
+    <ion-title>Surpreenda-me</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="surprise-content">
+  <div class="surprise-wrap">
+    <section class="surprise-filters">
+      <div class="surprise-filters__head">
+        <h2 class="surprise-filters__title">Filtros</h2>
+        <button type="button" class="surprise-filters__clear" (click)="clearFilters()">
+          Limpar
+        </button>
+      </div>
+      <div class="surprise-filters__grid">
+        <ion-select
+          class="surprise-select"
+          label="Histórico"
+          labelPlacement="stacked"
+          fill="solid"
+          [value]="seenFilter()"
+          (ionChange)="onSeenChange($event)"
+        >
+          <ion-select-option value="unseen">Apenas não vistos</ion-select-option>
+          <ion-select-option value="planejado">Apenas planejados</ion-select-option>
+          <ion-select-option value="any">Qualquer</ion-select-option>
+        </ion-select>
+
+        <ion-select
+          class="surprise-select"
+          label="Gênero"
+          labelPlacement="stacked"
+          fill="solid"
+          placeholder="Qualquer"
+          [value]="genreFilter()"
+          (ionChange)="onGenreChange($event)"
+        >
+          <ion-select-option value="">Qualquer</ion-select-option>
+          @for (g of availableGenres(); track g) {
+            <ion-select-option [value]="g">{{ g }}</ion-select-option>
+          }
+        </ion-select>
+
+        <ion-select
+          class="surprise-select"
+          label="Prioridade"
+          labelPlacement="stacked"
+          fill="solid"
+          placeholder="Qualquer"
+          [value]="priorityFilter()"
+          (ionChange)="onPriorityChange($event)"
+        >
+          <ion-select-option value="">Qualquer</ion-select-option>
+          @for (p of availablePriorities(); track p) {
+            <ion-select-option [value]="p">{{ priorityLabel(p) }}</ion-select-option>
+          }
+        </ion-select>
+
+        <ion-select
+          class="surprise-select"
+          label="Plataforma"
+          labelPlacement="stacked"
+          fill="solid"
+          placeholder="Qualquer"
+          [value]="platformFilter()"
+          (ionChange)="onPlatformChange($event)"
+        >
+          <ion-select-option value="">Qualquer</ion-select-option>
+          @for (p of availablePlatforms(); track p) {
+            <ion-select-option [value]="p">{{ p }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
+      <p class="surprise-filters__count">
+        {{ pool().length }}
+        {{ pool().length === 1 ? 'anime no sorteio' : 'animes no sorteio' }}
+      </p>
+    </section>
+
+    <section class="surprise-stage">
+      @if (!hasSpun()) {
+        <div class="surprise-placeholder">
+          <ion-icon name="sparkles-outline" />
+          <p>Aperte o botão pra surpreender</p>
+        </div>
+      } @else if (current(); as anime) {
+        <div class="surprise-result" [class.surprise-result--spinning]="spinning()">
+          <button
+            type="button"
+            class="surprise-result__cover"
+            [attr.aria-label]="anime.nome[0]"
+            [disabled]="spinning()"
+            (click)="openDetail()"
+          >
+            @if (anime.imagem; as src) {
+              <img [src]="src" [alt]="anime.nome[0]" />
+            } @else {
+              <span class="surprise-result__placeholder">{{ anime.nome[0] }}</span>
+            }
+          </button>
+          <div class="surprise-result__info">
+            <h3 class="surprise-result__title">{{ anime.nome[0] }}</h3>
+            @if (!spinning()) {
+              <p class="surprise-result__synopsis">{{ anime.sinopse }}</p>
+              <div class="surprise-result__meta">
+                @for (g of anime.generos.slice(0, 4); track g) {
+                  <span class="surprise-chip">{{ g }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="surprise-placeholder surprise-placeholder--empty">
+          <ion-icon name="dice-outline" />
+          <p>Nenhum anime atende a esses filtros. Tente afrouxar.</p>
+        </div>
+      }
+    </section>
+
+    <div class="surprise-actions">
+      <ion-button
+        class="surprise-spin"
+        expand="block"
+        [disabled]="spinning() || pool().length === 0"
+        (click)="spin()"
+      >
+        <ion-icon slot="start" [name]="spinning() ? 'dice' : 'dice-outline'" />
+        {{ spinning() ? 'Sorteando...' : (hasSpun() ? 'Outro!' : 'Surpreender-me') }}
+      </ion-button>
+      @if (hasSpun() && current() && !spinning()) {
+        <ion-button
+          class="surprise-detail"
+          expand="block"
+          fill="outline"
+          (click)="openDetail()"
+        >
+          <ion-icon slot="start" name="open-outline" />
+          Ver detalhes
+        </ion-button>
+      }
+    </div>
+  </div>
+</ion-content>

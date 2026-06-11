@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" aria-label="Cancelar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Ajustar foto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="processing()" aria-label="Salvar">
+        <ion-icon slot="icon-only" name="checkmark-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cropper-content">
+  <p class="cropper-hint">Arraste pra posicionar. Use o slider pra dar zoom.</p>
+
+  <div class="cropper-stage">
+    <div
+      class="cropper-viewport"
+      [style.width.px]="viewportSize"
+      [style.height.px]="viewportSize"
+      (pointerdown)="onPointerDown($event)"
+      (pointermove)="onPointerMove($event)"
+      (pointerup)="onPointerUp($event)"
+      (pointercancel)="onPointerUp($event)"
+    >
+      @if (imageUrl()) {
+        <img
+          #img
+          class="cropper-img"
+          [src]="imageUrl()"
+          [style.transform]="transform()"
+          (load)="onImageLoad()"
+          draggable="false"
+          alt="Pré-visualização"
+        />
+      }
+      <span class="cropper-circle" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="cropper-controls">
+    <ion-range
+      class="cropper-zoom"
+      min="0"
+      max="100"
+      [value]="zoomSliderValue()"
+      (ionInput)="onZoomChange($event)"
+      aria-label="Zoom"
+    >
+      <span slot="start">−</span>
+      <span slot="end">+</span>
+    </ion-range>
+  </div>
+</ion-content>

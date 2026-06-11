@@ -1,0 +1,113 @@
+.auth-content {
+  --background: var(--md-bg);
+}
+
+.auth-wrap {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 18px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
+  border-radius: var(--md-radius-lg);
+  padding: 28px 24px 24px;
+  box-shadow: var(--md-shadow-2);
+
+  &__title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--md-text);
+    text-align: center;
+  }
+
+  &__subtitle {
+    margin: 6px 0 22px;
+    text-align: center;
+    color: var(--md-text-muted);
+    font-size: 0.95rem;
+  }
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--md-surface-2);
+  border-radius: var(--md-radius);
+  padding: 4px;
+  margin-bottom: 20px;
+
+  &__tab {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 10px 12px;
+    border-radius: calc(var(--md-radius) - 2px);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--md-text-muted);
+    cursor: pointer;
+    transition: background var(--md-duration) var(--md-ease),
+      color var(--md-duration) var(--md-ease);
+
+    &--active {
+      background: var(--md-surface);
+      color: var(--md-text);
+      box-shadow: var(--md-shadow-1);
+    }
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__field {
+    --background: var(--md-surface-2);
+    --color: var(--md-text);
+    --border-radius: var(--md-radius);
+    --inner-padding-end: 12px;
+    --padding-start: 12px;
+    border-radius: var(--md-radius);
+    border: 1px solid var(--md-border);
+  }
+
+  &__hint {
+    margin: -2px 4px 0;
+    font-size: 0.78rem;
+    color: var(--md-text-dim);
+    line-height: 1.4;
+  }
+
+  &__error {
+    margin: 4px 4px 0;
+    font-size: 0.85rem;
+    color: var(--md-error);
+  }
+
+  &__submit {
+    margin-top: 8px;
+    --background: var(--md-primary);
+    --background-hover: var(--md-primary-hover);
+    --background-activated: var(--md-primary-hover);
+    --color: #fff;
+    --border-radius: var(--md-radius);
+    --box-shadow: none;
+    height: 46px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+
+    ion-spinner {
+      --color: #fff;
+    }
+  }
+}

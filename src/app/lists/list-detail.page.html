@@ -1,0 +1,100 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/lists" />
+    </ion-buttons>
+    @if (editing()) {
+      <ion-input
+        class="title-input"
+        maxlength="80"
+        [value]="draftName()"
+        (ionInput)="onNameInput($event.detail.value)"
+      />
+      <ion-buttons slot="end">
+        <ion-button (click)="cancelEdit()">Cancelar</ion-button>
+        <ion-button (click)="saveEdit()" color="primary">
+          <ion-icon slot="icon-only" name="checkmark-outline" />
+        </ion-button>
+      </ion-buttons>
+    } @else {
+      <ion-title>{{ list()?.name ?? 'Lista' }}</ion-title>
+      <ion-buttons slot="end">
+        <ion-button
+          (click)="toggleReorder()"
+          [color]="reordering() ? 'primary' : undefined"
+          aria-label="Reordenar"
+        >
+          @if (reordering()) {
+            Pronto
+          } @else {
+            <ion-icon slot="icon-only" name="reorder-three-outline" />
+          }
+        </ion-button>
+        @if (!reordering()) {
+          @if (isOwner()) {
+            <ion-button (click)="openCollaborators()" aria-label="Colaboradores">
+              <ion-icon slot="icon-only" name="people-outline" />
+            </ion-button>
+            <ion-button (click)="openShare()" aria-label="Compartilhar">
+              <ion-icon slot="icon-only" name="share-social-outline" />
+            </ion-button>
+            <ion-button (click)="startEdit()" aria-label="Renomear">
+              <ion-icon slot="icon-only" name="create-outline" />
+            </ion-button>
+            <ion-button (click)="confirmDelete()" aria-label="Excluir lista">
+              <ion-icon slot="icon-only" name="trash-outline" />
+            </ion-button>
+          }
+        }
+      </ion-buttons>
+    }
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="list-detail-content">
+  @if (errorMsg(); as msg) {
+    <p class="list-error" role="alert">{{ msg }}</p>
+  }
+  @if (!catalogReady() && (list()?.anime_ids?.length ?? 0) > 0) {
+    <app-skeleton-grid [count]="(list()?.anime_ids?.length ?? 6)" />
+  } @else if (items().length === 0) {
+    <p class="list-empty">
+      Esta lista está vazia. Abra um anime no catálogo e use "Adicionar à lista".
+    </p>
+  } @else if (reordering()) {
+    <p class="reorder-hint">Arraste pela alça pra mudar a ordem.</p>
+    <ion-reorder-group [disabled]="false" (ionItemReorder)="onReorder($event)">
+      @for (anime of items(); track anime.id) {
+        <div class="reorder-row">
+          <div class="reorder-row__cover">
+            @if (anime.imagem; as src) {
+              <img [src]="src" [alt]="anime.nome[0]" loading="lazy" />
+            } @else {
+              <span class="reorder-row__placeholder">{{ anime.nome[0] }}</span>
+            }
+          </div>
+          <span class="reorder-row__title">{{ anime.nome[0] }}</span>
+          <ion-reorder>
+            <ion-icon name="reorder-three-outline" class="reorder-row__handle" />
+          </ion-reorder>
+        </div>
+      }
+    </ion-reorder-group>
+  } @else {
+    <div class="grade">
+      @for (anime of items(); track anime.id) {
+        <div class="list-item">
+          <app-anime-cover [anime]="anime" (select)="openDetail($event)" />
+          <button
+            type="button"
+            class="list-item__remove"
+            aria-label="Remover da lista"
+            (click)="confirmRemove(anime); $event.stopPropagation()"
+          >
+            <ion-icon name="trash-outline" />
+          </button>
+        </div>
+      }
+    </div>
+  }
+</ion-content>

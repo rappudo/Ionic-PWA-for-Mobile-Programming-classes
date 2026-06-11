@@ -14,6 +14,11 @@
   --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --md-duration: 180ms;
 
+  // Semantic colors shared across themes.
+  --md-score: #facc15;
+  --md-score-contrast: #1f1604;
+  --md-error: #ef4444;
+
   // Priority scale (blue → green → yellow → orange, highest to lowest).
   --ion-color-prio-best: #2563eb;
   --ion-color-prio-best-rgb: 37, 99, 235;

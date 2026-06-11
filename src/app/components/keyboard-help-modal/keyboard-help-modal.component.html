@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Atalhos de teclado</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="kb-content">
+  @for (group of groups; track group.title) {
+    <section class="kb-group">
+      <h2 class="kb-group__title">{{ group.title }}</h2>
+      <ul class="kb-list">
+        @for (item of group.items; track item.description) {
+          <li class="kb-row">
+            <span class="kb-row__keys">
+              @for (k of item.keys; track k; let i = $index) {
+                <kbd>{{ k }}</kbd>
+                @if (i < item.keys.length - 1) {
+                  <span class="kb-row__then">depois</span>
+                }
+              }
+            </span>
+            <span class="kb-row__desc">{{ item.description }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</ion-content>

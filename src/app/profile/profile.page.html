@@ -1,0 +1,112 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="profile-content">
+  <div class="profile-wrap">
+    <div class="profile-card">
+      <div class="profile-avatar">
+        @if (avatarUrl(); as url) {
+          <img [src]="url" alt="Avatar" />
+        } @else {
+          <ion-icon name="person-circle-outline" />
+        }
+        @if (uploading()) {
+          <div class="profile-avatar__overlay"><ion-spinner name="crescent" /></div>
+        }
+      </div>
+
+      <h2 class="profile-username">@{{ username() }}</h2>
+
+      <div class="watch-card">
+        <ion-icon name="tv-outline" aria-hidden="true" />
+        <div class="watch-card__value">
+          <span class="watch-card__primary">{{ watchTime().primary }}</span>
+          @if (watchTime().secondary; as secondary) {
+            <span class="watch-card__secondary">{{ secondary }}</span>
+          }
+        </div>
+        <span class="watch-card__label">assistidos</span>
+      </div>
+
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ statusCounts().assistindo }}</span>
+          <span class="profile-stat__label">assistindo</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ statusCounts().concluido }}</span>
+          <span class="profile-stat__label">concluídos</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ statusCounts().planejado }}</span>
+          <span class="profile-stat__label">planejados</span>
+        </div>
+      </div>
+      <div class="profile-stats profile-stats--sub">
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ ratedCount() }}</span>
+          <span class="profile-stat__label">avaliados</span>
+        </div>
+        <div class="profile-stat">
+          <span class="profile-stat__value">{{ favoritesCount() }}</span>
+          <span class="profile-stat__label">favoritos</span>
+        </div>
+      </div>
+
+      <label class="profile-upload-btn">
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          [disabled]="uploading()"
+          (change)="onPickFile($event)"
+        />
+        <ion-icon name="camera-outline" />
+        <span>{{ avatarUrl() ? 'Trocar foto' : 'Adicionar foto' }}</span>
+      </label>
+
+      @if (error(); as message) {
+        <p class="profile-error" role="alert">{{ message }}</p>
+      }
+
+      <ion-button
+        expand="block"
+        class="profile-stats-btn"
+        routerLink="/stats"
+      >
+        <ion-icon slot="start" name="stats-chart-outline" />
+        Ver estatísticas
+      </ion-button>
+
+      @if (canInstall()) {
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="primary"
+          class="profile-install"
+          (click)="installApp()"
+        >
+          <ion-icon slot="start" name="cloud-download-outline" />
+          Instalar app
+        </ion-button>
+      }
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="medium"
+        class="profile-logout"
+        (click)="signOut()"
+      >
+        <ion-icon slot="start" name="log-out-outline" />
+        Sair
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

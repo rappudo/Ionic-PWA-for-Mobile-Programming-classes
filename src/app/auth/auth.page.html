@@ -1,0 +1,83 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="auth-card__title">Animes</h1>
+      <p class="auth-card__subtitle">
+        {{ mode() === 'signup' ? 'Crie sua conta' : 'Entre na sua conta' }}
+      </p>
+
+      <div class="auth-tabs" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          class="auth-tabs__tab"
+          [class.auth-tabs__tab--active]="mode() === 'signin'"
+          [attr.aria-selected]="mode() === 'signin'"
+          (click)="setMode('signin')"
+        >
+          Entrar
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="auth-tabs__tab"
+          [class.auth-tabs__tab--active]="mode() === 'signup'"
+          [attr.aria-selected]="mode() === 'signup'"
+          (click)="setMode('signup')"
+        >
+          Criar conta
+        </button>
+      </div>
+
+      <form class="auth-form" (ngSubmit)="submit()">
+        <ion-item lines="none" class="auth-form__field">
+          <ion-input
+            label="ID"
+            labelPlacement="stacked"
+            placeholder="seu_id"
+            autocapitalize="off"
+            autocomplete="username"
+            spellcheck="false"
+            [value]="username()"
+            (ionInput)="onUsernameInput($event.detail.value)"
+          />
+        </ion-item>
+
+        <ion-item lines="none" class="auth-form__field">
+          <ion-input
+            label="Senha"
+            labelPlacement="stacked"
+            type="password"
+            placeholder="••••••"
+            [autocomplete]="mode() === 'signup' ? 'new-password' : 'current-password'"
+            [value]="password()"
+            (ionInput)="onPasswordInput($event.detail.value)"
+          />
+        </ion-item>
+
+        @if (mode() === 'signup') {
+          <p class="auth-form__hint">
+            ID: 3–20 caracteres (a-z, 0-9, _). Senha: pelo menos 6 caracteres.
+          </p>
+        }
+
+        @if (error(); as message) {
+          <p class="auth-form__error" role="alert">{{ message }}</p>
+        }
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="auth-form__submit"
+          [disabled]="loading() || !username().trim() || !password()"
+        >
+          @if (loading()) {
+            <ion-spinner name="dots" />
+          } @else {
+            {{ mode() === 'signup' ? 'Criar conta' : 'Entrar' }}
+          }
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>

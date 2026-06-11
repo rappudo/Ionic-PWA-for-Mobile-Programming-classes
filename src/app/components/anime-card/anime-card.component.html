@@ -5,6 +5,16 @@
     } @else {
       <div class="capa-placeholder">{{ tituloPrincipal() }}</div>
     }
+    <button
+      type="button"
+      class="fav-btn"
+      [class.fav-btn--active]="isFavorite()"
+      [attr.aria-label]="isFavorite() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+      [attr.aria-pressed]="isFavorite()"
+      (click)="toggleFavorite()"
+    >
+      <ion-icon [name]="isFavorite() ? 'heart' : 'heart-outline'" aria-hidden="true" />
+    </button>
   </div>
 
   <div class="detail__info">
@@ -25,7 +35,128 @@
           {{ titulosAlternativos().join(' · ') }}
         </p>
       }
+
+      <div class="card-actions">
+        <button type="button" class="add-list-btn" (click)="openAddToList()">
+          <ion-icon name="bookmark-outline" aria-hidden="true" />
+          <span>
+            @if (listMembershipCount() === 0) {
+              Adicionar à lista
+            } @else {
+              Em {{ listMembershipCount() }}
+              {{ listMembershipCount() === 1 ? 'lista' : 'listas' }}
+            }
+          </span>
+        </button>
+        <button type="button" class="add-list-btn" (click)="openRecommend()">
+          <ion-icon name="paper-plane-outline" aria-hidden="true" />
+          <span>Indicar pra amigo</span>
+        </button>
+      </div>
     </header>
+
+    <section class="status-section" aria-label="Meu status">
+      <h3 class="status-section__title">Meu status</h3>
+      <div class="status-chips" role="radiogroup">
+        @for (s of statuses; track s.value) {
+          <button
+            type="button"
+            class="status-chip"
+            [class.status-chip--active]="currentStatus() === s.value"
+            [style.--chip-color]="s.color"
+            role="radio"
+            [attr.aria-checked]="currentStatus() === s.value"
+            (click)="setStatus(s.value)"
+          >
+            {{ s.label }}
+          </button>
+        }
+      </div>
+      @if (currentStatus() === 'assistindo' || currentStatus() === 'pausado') {
+        <div class="episode-counter">
+          <button
+            type="button"
+            class="episode-counter__btn"
+            aria-label="Diminuir episódios"
+            [disabled]="episodesWatched() === 0"
+            (click)="decEpisode()"
+          >
+            <ion-icon name="remove-outline" />
+          </button>
+          <div class="episode-counter__display">
+            <ion-input
+              class="episode-counter__input"
+              type="number"
+              inputmode="numeric"
+              min="0"
+              [value]="episodesWatched()"
+              (ionChange)="onEpisodesInput($event.detail.value)"
+            />
+            @if (totalEpisodes() > 0) {
+              <span class="episode-counter__total">/ {{ totalEpisodes() }}</span>
+            }
+          </div>
+          <button
+            type="button"
+            class="episode-counter__btn"
+            aria-label="Aumentar episódios"
+            (click)="bumpEpisode()"
+          >
+            <ion-icon name="add-outline" />
+          </button>
+        </div>
+      } @else if (currentStatus() === 'concluido' && totalEpisodes() > 0) {
+        <p class="episode-summary">{{ totalEpisodes() }} episódios concluídos</p>
+      }
+    </section>
+
+    <section class="rating" aria-label="Minha avaliação">
+      <div class="rating__header">
+        <h3 class="rating__title">Minha nota</h3>
+        @if (currentScore() !== null) {
+          <button type="button" class="rating__clear" (click)="clearScore()">Limpar</button>
+        }
+      </div>
+      <div class="rating__stars" role="radiogroup" aria-label="Nota de 1 a 10">
+        @for (s of stars; track s) {
+          <button
+            type="button"
+            class="rating__star"
+            [class.rating__star--filled]="currentScore() !== null && s <= currentScore()!"
+            role="radio"
+            [attr.aria-checked]="currentScore() === s"
+            [attr.aria-label]="s + ' de 10'"
+            (click)="setScore(s)"
+          >
+            <ion-icon
+              [name]="currentScore() !== null && s <= currentScore()! ? 'star' : 'star-outline'"
+              aria-hidden="true"
+            />
+          </button>
+        }
+        @if (currentScore() !== null) {
+          <span class="rating__value">{{ currentScore() }}/10</span>
+        }
+      </div>
+
+      <label class="rating__comment-label" for="rating-comment">Comentário (opcional)</label>
+      <textarea
+        id="rating-comment"
+        class="rating__comment"
+        rows="3"
+        maxlength="1000"
+        placeholder="O que você achou?"
+        [ngModel]="commentDraft()"
+        (ngModelChange)="onCommentChange($event)"
+        (blur)="onCommentBlur()"
+      ></textarea>
+      <div class="rating__status" aria-live="polite">
+        @switch (commentStatus()) {
+          @case ('saving') { <span>Salvando…</span> }
+          @case ('saved') { <span class="rating__status--ok">Salvo ✓</span> }
+        }
+      </div>
+    </section>
 
     <div class="detail__content">
       <p class="sinopse">{{ anime().sinopse }}</p>
@@ -48,10 +179,28 @@
       @if (anime().ondeVer.length) {
         <div class="chips">
           @for (plat of anime().ondeVer; track plat) {
-            <ion-chip color="secondary" outline="true"><ion-label>{{ plat }}</ion-label></ion-chip>
+            @if (hasStreamingLink(plat)) {
+              <ion-chip
+                color="secondary"
+                outline="true"
+                class="platform-chip platform-chip--linked"
+                [attr.role]="'link'"
+                [attr.aria-label]="'Buscar ' + tituloPrincipal() + ' em ' + plat"
+                (click)="openPlatform(plat)"
+              >
+                <ion-label>{{ plat }}</ion-label>
+                <ion-icon name="open-outline" aria-hidden="true" />
+              </ion-chip>
+            } @else {
+              <ion-chip color="secondary" outline="true" class="platform-chip">
+                <ion-label>{{ plat }}</ion-label>
+              </ion-chip>
+            }
           }
         </div>
       }
+
+      <app-similar-animes [anime]="anime()" />
     </div>
   </div>
 </article>

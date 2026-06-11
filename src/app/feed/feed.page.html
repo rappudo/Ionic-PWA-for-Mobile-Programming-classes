@@ -1,0 +1,188 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Feed</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" aria-label="Atualizar feed">
+        <ion-icon slot="icon-only" name="refresh-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="feed-content">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  <div class="feed-wrap">
+    @if (pendingRecs().length > 0) {
+      <section class="inbox-section">
+        <h2 class="inbox-section__title">Indicados pra você</h2>
+        <ul class="inbox-list">
+          @for (rec of pendingRecs(); track rec.rec.id) {
+            <li class="inbox-card">
+              <button
+                type="button"
+                class="inbox-card__cover"
+                [attr.aria-label]="rec.anime.nome[0]"
+                (click)="openAnime(rec.anime)"
+              >
+                @if (rec.anime.imagem; as src) {
+                  <img [src]="src" [alt]="rec.anime.nome[0]" loading="lazy" />
+                } @else {
+                  <span class="inbox-card__placeholder">{{ rec.anime.nome[0] }}</span>
+                }
+              </button>
+              <div class="inbox-card__body">
+                <p class="inbox-card__from">
+                  @if (rec.rec.from_user; as from) {
+                    <button
+                      type="button"
+                      class="inbox-card__user"
+                      (click)="openProfile(from.username)"
+                    >
+                      {{ '@' + from.username }}
+                    </button>
+                  }
+                  <span class="inbox-card__verb">te indicou</span>
+                </p>
+                <button
+                  type="button"
+                  class="inbox-card__title"
+                  (click)="openAnime(rec.anime)"
+                >
+                  {{ rec.anime.nome[0] }}
+                </button>
+                @if (rec.rec.message) {
+                  <p class="inbox-card__message">"{{ rec.rec.message }}"</p>
+                }
+              </div>
+              <button
+                type="button"
+                class="inbox-card__dismiss"
+                aria-label="Dispensar"
+                (click)="dismissRec(rec.rec.id)"
+              >
+                <ion-icon name="close-outline" />
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (loading()) {
+      <app-skeleton-row [count]="5" />
+    } @else if (!hasFriends()) {
+      <p class="feed-empty">
+        Adicione amigos pra ver a atividade deles aqui.
+      </p>
+    } @else if (items().length === 0) {
+      <p class="feed-empty">
+        Nenhuma atividade recente dos seus amigos.
+      </p>
+    } @else {
+      <ul class="feed-list">
+        @for (item of items(); track $index) {
+          <li class="feed-item">
+            <button
+              type="button"
+              class="feed-item__avatar"
+              [attr.aria-label]="'Ver perfil de ' + item.user.username"
+              (click)="openProfile(item.user.username)"
+            >
+              @if (item.user.avatar_url; as url) {
+                <img [src]="url" [alt]="item.user.username" />
+              } @else {
+                <ion-icon name="person-circle-outline" />
+              }
+            </button>
+            <div class="feed-item__body">
+              <p class="feed-item__line">
+                <button
+                  type="button"
+                  class="feed-item__user"
+                  (click)="openProfile(item.user.username)"
+                >
+                  {{ '@' + item.user.username }}
+                </button>
+                @switch (item.kind) {
+                  @case ('rated') {
+                    <span class="feed-item__verb">avaliou</span>
+                    <button
+                      type="button"
+                      class="feed-item__target"
+                      (click)="openAnime(item.anime)"
+                    >
+                      {{ item.anime.nome[0] }}
+                    </button>
+                    @if (item.score !== null) {
+                      <span class="feed-item__chip feed-item__chip--score">
+                        <ion-icon name="star" aria-hidden="true" />
+                        {{ item.score }}/10
+                      </span>
+                    }
+                    <button
+                      type="button"
+                      class="feed-item__thread-btn"
+                      aria-label="Ver comentários"
+                      (click)="openThread(item.user, item.anime, item.score, item.comment, item.at)"
+                    >
+                      <ion-icon name="chatbubble-outline" />
+                    </button>
+                  }
+                  @case ('favorited') {
+                    <span class="feed-item__verb">favoritou</span>
+                    <button
+                      type="button"
+                      class="feed-item__target"
+                      (click)="openAnime(item.anime)"
+                    >
+                      {{ item.anime.nome[0] }}
+                    </button>
+                    <ion-icon class="feed-item__heart" name="heart" aria-hidden="true" />
+                  }
+                  @case ('status') {
+                    <span class="feed-item__verb">{{ statusVerb(item.status) }}</span>
+                    <button
+                      type="button"
+                      class="feed-item__target"
+                      (click)="openAnime(item.anime)"
+                    >
+                      {{ item.anime.nome[0] }}
+                    </button>
+                    @if (item.status === 'assistindo' && item.total > 0) {
+                      <span
+                        class="feed-item__chip"
+                        [style.--chip-color]="statusColor(item.status)"
+                      >
+                        {{ item.episodes }}/{{ item.total }}
+                      </span>
+                    }
+                  }
+                  @case ('list') {
+                    <span class="feed-item__verb">atualizou a lista</span>
+                    <span class="feed-item__target feed-item__target--static">
+                      <ion-icon name="bookmark-outline" aria-hidden="true" />
+                      {{ item.list.name }}
+                    </span>
+                  }
+                }
+              </p>
+              @if (item.kind === 'rated' && item.comment) {
+                <p class="feed-item__comment">{{ item.comment }}</p>
+              }
+              <span class="feed-item__time">
+                <ion-icon name="time-outline" aria-hidden="true" />
+                {{ timeAgo(item.at) }}
+              </span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</ion-content>

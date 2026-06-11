@@ -1,37 +1,53 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import {
+  IonAvatar,
   IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
+  IonRefresher,
+  IonRefresherContent,
   IonSearchbar,
   IonSelect,
   IonSelectOption,
   IonTitle,
   IonToolbar,
   ModalController,
+  RefresherCustomEvent,
   SearchbarCustomEvent,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  bookmarksOutline,
   chevronDownOutline,
   chevronForwardOutline,
   closeOutline,
   moonOutline,
+  newspaperOutline,
+  peopleOutline,
+  personCircleOutline,
+  sparklesOutline,
   sunnyOutline,
 } from 'ionicons/icons';
 
 import { AnimeCoverComponent } from '../components/anime-cover/anime-cover.component';
 import { AnimeDetailModalComponent } from '../components/anime-detail-modal/anime-detail-modal.component';
 import { FilterPickerModalComponent } from '../components/filter-picker-modal/filter-picker-modal.component';
+import { SkeletonGridComponent } from '../components/skeleton/skeleton-grid.component';
 import { Anime, ClassificacaoIndicativa, Recomendacao } from '../models/anime';
 import { RECOMENDACAO_META } from '../models/recomendacao';
 import { buildHaystack, matchesQuery } from '../services/anime-search';
 import { AnimeService } from '../services/anime.service';
+import { AuthService } from '../services/auth.service';
+import { CustomListsService } from '../services/custom-lists.service';
+import { FriendsService } from '../services/friends.service';
+import { RecommendationsInboxService } from '../services/recommendations-inbox.service';
 import { ThemeService } from '../services/theme.service';
+import { UserAnimeService } from '../services/user-anime.service';
 
 interface IndexedAnime {
   readonly anime: Anime;
@@ -95,24 +111,39 @@ function uniqueSorted(values: readonly string[]): string[] {
   styleUrls: ['home.page.scss'],
   imports: [
     AnimeCoverComponent,
+    IonAvatar,
     IonBadge,
     IonButton,
     IonButtons,
     IonContent,
     IonHeader,
     IonIcon,
+    IonRefresher,
+    IonRefresherContent,
     IonSearchbar,
     IonSelect,
     IonSelectOption,
     IonTitle,
     IonToolbar,
+    RouterLink,
+    SkeletonGridComponent,
   ],
 })
 export class HomePage {
   private readonly modalCtrl = inject(ModalController);
   private readonly themeService = inject(ThemeService);
+  private readonly authService = inject(AuthService);
+  private readonly friendsService = inject(FriendsService);
+  private readonly animeService = inject(AnimeService);
+  private readonly inboxService = inject(RecommendationsInboxService);
+  private readonly userDataService = inject(UserAnimeService);
+  private readonly listsService = inject(CustomListsService);
 
   readonly theme = this.themeService.theme;
+  readonly profile = this.authService.profile;
+  readonly incomingFriendCount = this.friendsService.incomingCount;
+  readonly pendingRecsCount = this.inboxService.pendingCount;
+  readonly catalogReady = this.animeService.ready;
 
   readonly query = signal('');
   readonly sortBy = signal<SortKey>('recomendacao');
@@ -131,7 +162,7 @@ export class HomePage {
     );
   });
 
-  private readonly animes = toSignal(inject(AnimeService).list(), {
+  private readonly animes = toSignal(this.animeService.list(), {
     initialValue: [] as Anime[],
   });
 
@@ -177,10 +208,15 @@ export class HomePage {
 
   constructor() {
     addIcons({
+      'bookmarks-outline': bookmarksOutline,
       'chevron-down-outline': chevronDownOutline,
       'chevron-forward-outline': chevronForwardOutline,
       'close-outline': closeOutline,
       'moon-outline': moonOutline,
+      'newspaper-outline': newspaperOutline,
+      'people-outline': peopleOutline,
+      'person-circle-outline': personCircleOutline,
+      'sparkles-outline': sparklesOutline,
       'sunny-outline': sunnyOutline,
     });
   }
@@ -237,6 +273,16 @@ export class HomePage {
     if (role === 'apply' && data) {
       this.filters.update((f) => ({ ...f, [key]: data }));
     }
+  }
+
+  async onRefresh(event: Event): Promise<void> {
+    await Promise.all([
+      this.userDataService.refresh(),
+      this.listsService.refresh(),
+      this.friendsService.refresh(),
+      this.inboxService.refresh(),
+    ]);
+    (event as RefresherCustomEvent).detail.complete();
   }
 
   async openDetail(anime: Anime): Promise<void> {

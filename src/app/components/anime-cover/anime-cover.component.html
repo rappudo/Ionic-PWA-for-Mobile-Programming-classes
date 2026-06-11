@@ -13,6 +13,32 @@
     }
     <span class="cover__accent" aria-hidden="true"></span>
     <span class="cover__shade" aria-hidden="true"></span>
+    @if (isFavorite()) {
+      <span class="cover__fav" aria-label="Favorito">
+        <ion-icon name="heart" aria-hidden="true" />
+      </span>
+    }
+    @if (statusInfo(); as info) {
+      <span
+        class="cover__status"
+        [style.--status-color]="info.color"
+        [attr.aria-label]="info.label"
+      >
+        @if (info.status === 'assistindo' && info.total > 0) {
+          {{ info.episodes }}/{{ info.total }}
+        } @else if (info.status === 'concluido') {
+          ✓
+        } @else {
+          {{ info.label }}
+        }
+      </span>
+    }
+    @if (score(); as s) {
+      <span class="cover__score" [attr.aria-label]="'Sua nota: ' + s + ' de 10'">
+        <ion-icon name="star" aria-hidden="true" />
+        {{ s }}
+      </span>
+    }
   </span>
   <span class="cover__title">{{ tituloPrincipal() }}</span>
 </button>

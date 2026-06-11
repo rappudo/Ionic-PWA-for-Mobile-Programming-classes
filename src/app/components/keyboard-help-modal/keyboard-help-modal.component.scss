@@ -1,0 +1,77 @@
+ion-header ion-toolbar {
+  --background: var(--md-bg);
+  --color: var(--md-text);
+  --border-color: var(--md-border);
+}
+
+.kb-content {
+  --background: var(--md-bg);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 24px;
+}
+
+.kb-group {
+  margin-bottom: 18px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-text-muted);
+    font-weight: 700;
+  }
+}
+
+.kb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kb-row {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
+  border-radius: var(--md-radius);
+
+  &__keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  &__then {
+    color: var(--md-text-dim);
+    font-size: 0.72rem;
+    font-style: italic;
+  }
+
+  &__desc {
+    color: var(--md-text);
+    font-size: 0.92rem;
+  }
+
+  kbd {
+    background: var(--md-surface-2);
+    border: 1px solid var(--md-border-strong);
+    border-bottom-width: 2px;
+    border-radius: var(--md-radius-sm);
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--md-text);
+    min-width: 24px;
+    text-align: center;
+  }
+}

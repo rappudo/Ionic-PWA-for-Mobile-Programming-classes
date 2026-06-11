@@ -1,0 +1,37 @@
+@if (loading() || items().length > 0) {
+  <section class="similar">
+    <h3 class="similar__title">Parecidos com este</h3>
+    @if (loading()) {
+      <div class="similar__strip">
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div class="similar-card similar-card--sk">
+            <div class="similar-card__media similar-card__media--sk">
+              <ion-skeleton-text [animated]="true" />
+            </div>
+            <ion-skeleton-text class="similar-card__title-sk" [animated]="true" />
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="similar__strip">
+        @for (a of items(); track a.id) {
+          <button
+            type="button"
+            class="similar-card"
+            [attr.aria-label]="a.nome[0]"
+            (click)="openSimilar(a)"
+          >
+            <span class="similar-card__media">
+              @if (a.imagem; as src) {
+                <img [src]="src" [alt]="a.nome[0]" loading="lazy" />
+              } @else {
+                <span class="similar-card__placeholder">{{ a.nome[0] }}</span>
+              }
+            </span>
+            <span class="similar-card__title">{{ a.nome[0] }}</span>
+          </button>
+        }
+      </div>
+    }
+  </section>
+}

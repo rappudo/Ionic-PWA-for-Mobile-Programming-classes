@@ -1,0 +1,136 @@
+ion-header ion-toolbar {
+  --background: var(--md-bg);
+  --color: var(--md-text);
+  --border-color: var(--md-border);
+}
+
+.add-content {
+  --background: var(--md-bg);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 24px;
+}
+
+.add-target {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--md-text-muted);
+  font-style: italic;
+}
+
+.add-create {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 12px;
+
+  &__input {
+    flex: 1;
+    --background: var(--md-surface);
+    --color: var(--md-text);
+    --placeholder-color: var(--md-text-dim);
+    --border-radius: var(--md-radius);
+    --padding-start: 12px;
+    --padding-end: 12px;
+    border: 1px solid var(--md-border);
+    border-radius: var(--md-radius);
+    min-height: 42px;
+  }
+
+  &__btn {
+    --background: var(--md-primary);
+    --background-hover: var(--md-primary-hover);
+    --color: #fff;
+    --border-radius: var(--md-radius);
+    --box-shadow: none;
+    height: 42px;
+    text-transform: none;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin: 0;
+  }
+}
+
+.add-error {
+  margin: 6px 0;
+  color: var(--md-error);
+  font-size: 0.85rem;
+}
+
+.add-empty {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--md-text-muted);
+}
+
+.add-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__row {
+    background: var(--md-surface);
+    border: 1px solid var(--md-border);
+    border-radius: var(--md-radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background var(--md-duration) var(--md-ease),
+      border-color var(--md-duration) var(--md-ease);
+
+    &:hover {
+      background: var(--md-surface-2);
+      border-color: var(--md-border-strong);
+    }
+
+    &--checked {
+      border-color: var(--md-primary);
+      background: var(--md-primary-soft);
+    }
+  }
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-weight: 600;
+    color: var(--md-text);
+  }
+
+  &__count {
+    font-size: 0.78rem;
+    color: var(--md-text-muted);
+  }
+
+  &__check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--md-border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--md-primary);
+    transition: background var(--md-duration) var(--md-ease),
+      border-color var(--md-duration) var(--md-ease);
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+
+  &__row--checked &__check {
+    background: var(--md-primary);
+    border-color: var(--md-primary);
+    color: #fff;
+  }
+}

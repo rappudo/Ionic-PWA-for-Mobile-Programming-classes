@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Colaboradores</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="collab-content">
+  <p class="collab-hint">
+    Quem você adicionar pode adicionar, remover e reordenar animes — mas não pode renomear nem excluir a lista.
+  </p>
+
+  <form class="collab-invite" (ngSubmit)="invite()">
+    <ion-input
+      class="collab-invite__input"
+      placeholder="ID do usuário"
+      autocapitalize="off"
+      spellcheck="false"
+      [value]="inviteName()"
+      (ionInput)="onInviteInput($event.detail.value)"
+    />
+    <ion-button
+      type="submit"
+      class="collab-invite__btn"
+      [disabled]="!inviteName().trim() || busy()"
+    >
+      <ion-icon slot="start" name="person-add-outline" />
+      Adicionar
+    </ion-button>
+  </form>
+
+  @if (error(); as msg) {
+    <p class="collab-error" role="alert">{{ msg }}</p>
+  }
+
+  @if (collaborators().length === 0 && !loading()) {
+    <p class="collab-empty">Ninguém ainda. Adicione alguém pelo ID acima.</p>
+  } @else {
+    <ul class="collab-list">
+      @for (c of collaborators(); track c.user_id) {
+        <li class="collab-row">
+          <div class="collab-row__avatar">
+            @if (c.profile?.avatar_url; as url) {
+              <img [src]="url" [alt]="c.profile?.username ?? ''" />
+            } @else {
+              <ion-icon name="person-circle-outline" />
+            }
+          </div>
+          <span class="collab-row__name">
+            {{ c.profile ? '@' + c.profile.username : 'usuário' }}
+          </span>
+          <button
+            type="button"
+            class="collab-row__remove"
+            aria-label="Remover"
+            (click)="remove(c.user_id)"
+          >
+            <ion-icon name="trash-outline" />
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</ion-content>

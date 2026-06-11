@@ -1,0 +1,102 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Comentários</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="thread-content">
+  <section class="thread-rating">
+    <div class="thread-rating__head">
+      <div class="thread-rating__avatar">
+        @if (ratingOwner.avatar_url; as url) {
+          <img [src]="url" [alt]="ratingOwner.username" />
+        } @else {
+          <ion-icon name="person-circle-outline" />
+        }
+      </div>
+      <div class="thread-rating__meta">
+        <span class="thread-rating__user">{{ '@' + ratingOwner.username }}</span>
+        <span class="thread-rating__anime">{{ anime.nome[0] }}</span>
+      </div>
+      @if (rating.score !== null) {
+        <span class="thread-rating__score">
+          <ion-icon name="star" aria-hidden="true" />
+          {{ rating.score }}/10
+        </span>
+      }
+    </div>
+    @if (rating.comment) {
+      <p class="thread-rating__comment">{{ rating.comment }}</p>
+    }
+  </section>
+
+  <section class="thread-comments">
+    @if (loading()) {
+      <div class="thread-loading"><ion-spinner name="crescent" /></div>
+    } @else if (comments().length === 0) {
+      <p class="thread-empty">Seja o primeiro a comentar.</p>
+    } @else {
+      <ul class="thread-list">
+        @for (c of comments(); track c.id) {
+          <li class="thread-comment">
+            <div class="thread-comment__avatar">
+              @if (c.author?.avatar_url; as url) {
+                <img [src]="url" [alt]="c.author?.username ?? ''" />
+              } @else {
+                <ion-icon name="person-circle-outline" />
+              }
+            </div>
+            <div class="thread-comment__body">
+              <div class="thread-comment__head">
+                <span class="thread-comment__user">
+                  {{ c.author ? '@' + c.author.username : 'usuário' }}
+                </span>
+                <span class="thread-comment__time">{{ timeAgo(c.created_at) }}</span>
+              </div>
+              <p class="thread-comment__text">{{ c.body }}</p>
+            </div>
+            @if (c.author_id === currentUserId()) {
+              <button
+                type="button"
+                class="thread-comment__delete"
+                aria-label="Remover comentário"
+                (click)="delete(c.id)"
+              >
+                <ion-icon name="trash-outline" />
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</ion-content>
+
+<ion-toolbar class="thread-compose">
+  <form class="thread-compose__form" (ngSubmit)="send()">
+    <textarea
+      class="thread-compose__input"
+      rows="2"
+      maxlength="500"
+      placeholder="Escreva uma resposta…"
+      [value]="draft()"
+      (input)="onDraftInput($any($event.target).value)"
+    ></textarea>
+    <ion-button
+      type="submit"
+      class="thread-compose__btn"
+      aria-label="Enviar"
+      [disabled]="!draft().trim() || sending()"
+    >
+      <ion-icon slot="icon-only" name="send-outline" />
+    </ion-button>
+  </form>
+  @if (error(); as msg) {
+    <p class="thread-compose__error" role="alert">{{ msg }}</p>
+  }
+</ion-toolbar>

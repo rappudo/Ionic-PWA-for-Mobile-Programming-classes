@@ -12,6 +12,53 @@
           [name]="theme() === 'dark' ? 'sunny-outline' : 'moon-outline'"
         />
       </ion-button>
+      <ion-button
+        class="theme-toggle friends-btn"
+        routerLink="/feed"
+        aria-label="Feed dos amigos"
+      >
+        <ion-icon slot="icon-only" name="newspaper-outline" />
+        @if (pendingRecsCount() > 0) {
+          <ion-badge class="friends-btn__badge">{{ pendingRecsCount() }}</ion-badge>
+        }
+      </ion-button>
+      <ion-button
+        class="theme-toggle"
+        routerLink="/recommendations"
+        aria-label="Recomendações"
+      >
+        <ion-icon slot="icon-only" name="sparkles-outline" />
+      </ion-button>
+      <ion-button
+        class="theme-toggle"
+        routerLink="/lists"
+        aria-label="Minhas listas"
+      >
+        <ion-icon slot="icon-only" name="bookmarks-outline" />
+      </ion-button>
+      <ion-button
+        class="theme-toggle friends-btn"
+        routerLink="/friends"
+        aria-label="Amigos"
+      >
+        <ion-icon slot="icon-only" name="people-outline" />
+        @if (incomingFriendCount() > 0) {
+          <ion-badge class="friends-btn__badge">{{ incomingFriendCount() }}</ion-badge>
+        }
+      </ion-button>
+      <ion-button
+        class="profile-btn"
+        routerLink="/profile"
+        aria-label="Abrir perfil"
+      >
+        @if (profile()?.avatar_url; as url) {
+          <ion-avatar slot="icon-only" class="profile-btn__avatar">
+            <img [src]="url" alt="" />
+          </ion-avatar>
+        } @else {
+          <ion-icon slot="icon-only" name="person-circle-outline" />
+        }
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
@@ -134,15 +181,23 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="grade">
-    @for (anime of filtered(); track anime.id) {
-      <app-anime-cover [anime]="anime" (select)="openDetail($event)" />
-    } @empty {
-      @if (query().trim() || activeFilterCount() > 0) {
-        <p class="empty">Nenhum anime corresponde aos filtros atuais.</p>
-      } @else {
-        <p class="empty">Nenhum anime carregado.</p>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  @if (!catalogReady()) {
+    <app-skeleton-grid [count]="18" />
+  } @else {
+    <div class="grade">
+      @for (anime of filtered(); track anime.id) {
+        <app-anime-cover [anime]="anime" (select)="openDetail($event)" />
+      } @empty {
+        @if (query().trim() || activeFilterCount() > 0) {
+          <p class="empty">Nenhum anime corresponde aos filtros atuais.</p>
+        } @else {
+          <p class="empty">Nenhum anime carregado.</p>
+        }
       }
-    }
-  </div>
+    </div>
+  }
 </ion-content>

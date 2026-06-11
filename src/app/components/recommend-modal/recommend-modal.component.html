@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Indicar anime</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="rec-content">
+  @if (animeTitle) {
+    <p class="rec-target">{{ animeTitle }}</p>
+  }
+
+  <ion-input
+    class="rec-message"
+    placeholder="Mensagem opcional"
+    maxlength="300"
+    [value]="message()"
+    (ionInput)="onMessageInput($event.detail.value)"
+  />
+
+  @if (error(); as msg) {
+    <p class="rec-error" role="alert">{{ msg }}</p>
+  }
+
+  @if (friendList().length === 0) {
+    <p class="rec-empty">
+      Você ainda não tem amigos. Adicione na aba Amigos primeiro.
+    </p>
+  } @else {
+    <ul class="rec-friends">
+      @for (view of friendList(); track view.other.id) {
+        <li class="rec-friend">
+          <div class="rec-friend__avatar">
+            @if (view.other.avatar_url; as url) {
+              <img [src]="url" [alt]="view.other.username" />
+            } @else {
+              <ion-icon name="person-circle-outline" />
+            }
+          </div>
+          <span class="rec-friend__name">{{ '@' + view.other.username }}</span>
+          <ion-button
+            class="rec-friend__btn"
+            [disabled]="alreadyOrJustSent(view.other.id) || sending() === view.other.id"
+            (click)="send(view.other)"
+          >
+            @if (alreadyOrJustSent(view.other.id)) {
+              <ion-icon slot="icon-only" name="checkmark-outline" />
+            } @else if (sending() === view.other.id) {
+              ...
+            } @else {
+              Indicar
+            }
+          </ion-button>
+        </li>
+      }
+    </ul>
+  }
+</ion-content>

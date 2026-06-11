@@ -1,0 +1,108 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/stats" />
+    </ion-buttons>
+    <ion-title>Retrospectiva</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="yir-content">
+  <div class="yir-wrap">
+    <header class="yir-hero">
+      <span class="yir-hero__label">Seu</span>
+      <span class="yir-hero__year">{{ currentYear }}</span>
+      <span class="yir-hero__sub">em animes</span>
+    </header>
+
+    @if (!hasData()) {
+      <p class="yir-empty">
+        Você ainda não tem atividade em {{ currentYear }}. Marque animes como
+        concluídos ou avalie pra essa retrospectiva começar a contar.
+      </p>
+    } @else {
+      <section class="yir-card yir-card--accent">
+        <ion-icon name="tv-outline" />
+        <span class="yir-card__big">{{ finishedCount() }}</span>
+        <span class="yir-card__label">
+          {{ finishedCount() === 1 ? 'anime concluído' : 'animes concluídos' }}
+        </span>
+        @if (finishedCountPrev() > 0) {
+          <span class="yir-delta" [class.yir-delta--up]="finishedDelta() >= 0">
+            <ion-icon
+              [name]="finishedDelta() >= 0 ? 'trending-up-outline' : 'trending-down-outline'"
+            />
+            {{ finishedDelta() > 0 ? '+' : '' }}{{ finishedDelta() }} vs {{ previousYear }}
+          </span>
+        }
+      </section>
+
+      <section class="yir-card">
+        <ion-icon name="tv-outline" />
+        <span class="yir-card__big">{{ watchTime().primary }}</span>
+        <span class="yir-card__label">assistindo no ano</span>
+        @if (watchTime().secondary; as sec) {
+          <span class="yir-card__hint">{{ sec }}</span>
+        }
+        @if (watchTimePrev().primary !== '0 min') {
+          <span class="yir-card__compare">Em {{ previousYear }}: {{ watchTimePrev().primary }}</span>
+        }
+      </section>
+
+      @if (averageScore() !== null) {
+        <section class="yir-card">
+          <ion-icon name="star" />
+          <span class="yir-card__big">{{ averageScore() | number: '1.1-1' }}</span>
+          <span class="yir-card__label">nota média do ano</span>
+        </section>
+      }
+
+      @if (bestMonth(); as m) {
+        <section class="yir-card">
+          <ion-icon name="calendar-outline" />
+          <span class="yir-card__big">{{ m.name }}</span>
+          <span class="yir-card__label">
+            seu mês mais intenso — {{ m.count }} {{ m.count === 1 ? 'concluído' : 'concluídos' }}
+          </span>
+        </section>
+      }
+
+      @if (topGenre(); as g) {
+        <section class="yir-card">
+          <ion-icon name="flame-outline" />
+          <span class="yir-card__big yir-card__big--genre">{{ g.name }}</span>
+          <span class="yir-card__label">
+            gênero mais assistido — {{ g.count }} {{ g.count === 1 ? 'anime' : 'animes' }}
+          </span>
+        </section>
+      }
+
+      @if (topAnimes().length > 0) {
+        <section class="yir-top">
+          <h2 class="yir-top__title">Seu top do ano</h2>
+          <ul class="yir-top__list">
+            @for (item of topAnimes(); track item.anime.id; let i = $index) {
+              <li class="yir-top-row" (click)="openAnime(item.anime)">
+                <span class="yir-top-row__rank">#{{ i + 1 }}</span>
+                <div class="yir-top-row__cover">
+                  @if (item.anime.imagem; as src) {
+                    <img [src]="src" [alt]="item.anime.nome[0]" loading="lazy" />
+                  } @else {
+                    <span class="yir-top-row__placeholder">{{ item.anime.nome[0] }}</span>
+                  }
+                </div>
+                <div class="yir-top-row__info">
+                  <span class="yir-top-row__title">{{ item.anime.nome[0] }}</span>
+                  <span class="yir-top-row__score">
+                    <ion-icon name="star" />
+                    {{ item.score }}/10
+                  </span>
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  </div>
+</ion-content>

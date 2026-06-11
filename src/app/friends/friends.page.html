@@ -1,0 +1,199 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Amigos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="friends-content">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  <div class="friends-wrap">
+    <div class="friends-add-wrap">
+      <form class="friends-add" (ngSubmit)="sendRequest()">
+        <ion-input
+          class="friends-add__input"
+          placeholder="Buscar usuário por ID"
+          autocapitalize="off"
+          spellcheck="false"
+          [value]="newFriendId()"
+          (ionInput)="onUsernameInput($event.detail.value)"
+          (ionFocus)="onSearchFocus()"
+          (ionBlur)="onSearchBlur()"
+        />
+        <ion-button
+          type="submit"
+          class="friends-add__btn"
+          [disabled]="!newFriendId().trim() || sending()"
+        >
+          <ion-icon slot="start" name="person-add-outline" />
+          Adicionar
+        </ion-button>
+      </form>
+      @if (suggestionsOpen() && newFriendId().trim().length >= 2) {
+        <div class="suggestions" role="listbox">
+          @if (searching() && suggestions().length === 0) {
+            <div class="suggestions__loading">Buscando…</div>
+          } @else if (suggestions().length === 0) {
+            <div class="suggestions__empty">Nenhum usuário com esse prefixo.</div>
+          } @else {
+            @for (p of suggestions(); track p.id) {
+              <button
+                type="button"
+                role="option"
+                class="suggestion"
+                (mousedown)="$event.preventDefault()"
+                (click)="selectSuggestion(p)"
+              >
+                <div class="suggestion__avatar">
+                  @if (p.avatar_url; as url) {
+                    <img [src]="url" [alt]="p.username" />
+                  } @else {
+                    <ion-icon name="person-circle-outline" />
+                  }
+                </div>
+                <span class="suggestion__name">{{ '@' + p.username }}</span>
+                @if (relationshipFor(p.id); as rel) {
+                  <span class="suggestion__badge" [attr.data-tone]="rel.tone">{{ rel.label }}</span>
+                }
+              </button>
+            }
+          }
+        </div>
+      }
+    </div>
+
+    @if (error(); as msg) {
+      <p class="friends-error" role="alert">{{ msg }}</p>
+    }
+    @if (info(); as msg) {
+      <p class="friends-info" role="status">{{ msg }}</p>
+    }
+
+    @if (pendingIncoming().length) {
+      <section class="friends-section">
+        <h2 class="friends-section__title">
+          Pedidos recebidos
+          <span class="friends-section__count">{{ pendingIncoming().length }}</span>
+        </h2>
+        <ul class="friends-list">
+          @for (view of pendingIncoming(); track view.other.id) {
+            <li class="friend-row" (click)="openProfile(view.other.username)">
+              <div class="friend-row__avatar">
+                @if (view.other.avatar_url; as url) {
+                  <img [src]="url" [alt]="view.other.username" />
+                } @else {
+                  <ion-icon name="person-circle-outline" />
+                }
+              </div>
+              <div class="friend-row__info">
+                <span class="friend-row__name">{{ '@' + view.other.username }}</span>
+              </div>
+              <div class="friend-row__actions" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="action-btn action-btn--accept"
+                  aria-label="Aceitar"
+                  (click)="accept(view.friendship)"
+                >
+                  <ion-icon name="checkmark-outline" />
+                </button>
+                <button
+                  type="button"
+                  class="action-btn action-btn--reject"
+                  aria-label="Recusar"
+                  (click)="reject(view.friendship, view.other.username)"
+                >
+                  <ion-icon name="close-outline" />
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (pendingOutgoing().length) {
+      <section class="friends-section">
+        <h2 class="friends-section__title">Pedidos enviados</h2>
+        <ul class="friends-list">
+          @for (view of pendingOutgoing(); track view.other.id) {
+            <li class="friend-row" (click)="openProfile(view.other.username)">
+              <div class="friend-row__avatar">
+                @if (view.other.avatar_url; as url) {
+                  <img [src]="url" [alt]="view.other.username" />
+                } @else {
+                  <ion-icon name="person-circle-outline" />
+                }
+              </div>
+              <div class="friend-row__info">
+                <span class="friend-row__name">{{ '@' + view.other.username }}</span>
+                <span class="friend-row__sub">aguardando…</span>
+              </div>
+              <div class="friend-row__actions" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="action-btn action-btn--reject"
+                  aria-label="Cancelar pedido"
+                  (click)="cancelOutgoing(view.friendship, view.other.username)"
+                >
+                  <ion-icon name="close-outline" />
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="friends-section">
+      <h2 class="friends-section__title">
+        Amigos
+        <span class="friends-section__count">{{ accepted().length }}</span>
+      </h2>
+      @if (loading() && accepted().length === 0) {
+        <app-skeleton-row [count]="3" />
+      } @else if (accepted().length === 0) {
+        <p class="friends-empty">
+          Você ainda não tem amigos. Adicione pelo ID acima.
+        </p>
+      } @else {
+        <ul class="friends-list">
+          @for (view of accepted(); track view.other.id) {
+            <li class="friend-row" (click)="openProfile(view.other.username)">
+              <div class="friend-row__avatar">
+                @if (view.other.avatar_url; as url) {
+                  <img [src]="url" [alt]="view.other.username" />
+                } @else {
+                  <ion-icon name="person-circle-outline" />
+                }
+              </div>
+              <div class="friend-row__info">
+                <span class="friend-row__name">{{ '@' + view.other.username }}</span>
+              </div>
+              @if (matchScore(view.other.id); as pct) {
+                <span class="friend-row__match" [attr.aria-label]="pct + '% de match'">
+                  {{ pct }}%
+                </span>
+              }
+              <div class="friend-row__actions" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="action-btn action-btn--reject"
+                  aria-label="Remover amizade"
+                  (click)="unfriend(view.friendship, view.other.username)"
+                >
+                  <ion-icon name="close-outline" />
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+</ion-content>

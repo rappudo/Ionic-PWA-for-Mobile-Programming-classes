@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Adicionar à lista</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="add-content">
+  @if (animeTitle) {
+    <p class="add-target">{{ animeTitle }}</p>
+  }
+
+  <form class="add-create" (ngSubmit)="createAndAdd()">
+    <ion-input
+      class="add-create__input"
+      placeholder="Nova lista (ex: Romance legal)"
+      maxlength="80"
+      [value]="newListName()"
+      (ionInput)="onNewListInput($event.detail.value)"
+    />
+    <ion-button
+      type="submit"
+      class="add-create__btn"
+      [disabled]="!newListName().trim() || creating()"
+    >
+      <ion-icon slot="start" name="add-outline" />
+      Criar
+    </ion-button>
+  </form>
+
+  @if (error(); as message) {
+    <p class="add-error" role="alert">{{ message }}</p>
+  }
+
+  @if (lists().length === 0) {
+    <p class="add-empty">Você ainda não tem listas. Crie a primeira acima.</p>
+  } @else {
+    <ul class="add-list">
+      @for (list of lists(); track list.id) {
+        <li
+          class="add-list__row"
+          [class.add-list__row--checked]="isMember(list.id)"
+          (click)="toggle(list.id)"
+        >
+          <div class="add-list__info">
+            <span class="add-list__name">{{ list.name }}</span>
+            <span class="add-list__count">
+              {{ list.anime_ids.length }}
+              {{ list.anime_ids.length === 1 ? 'anime' : 'animes' }}
+            </span>
+          </div>
+          <span class="add-list__check" aria-hidden="true">
+            @if (isMember(list.id)) {
+              <ion-icon name="checkmark-outline" />
+            }
+          </span>
+        </li>
+      }
+    </ul>
+  }
+</ion-content>

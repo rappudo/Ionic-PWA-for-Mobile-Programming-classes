@@ -1,0 +1,64 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.csr.html",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "anime-catalog",
+      "urls": ["/assets/animes.json"],
+      "cacheConfig": {
+        "maxSize": 1,
+        "maxAge": "5m",
+        "timeout": "5s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "anime-covers",
+      "urls": [
+        "https://cdn.myanimelist.net/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 200,
+        "maxAge": "30d",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "avatars-dicebear",
+      "urls": [
+        "https://api.dicebear.com/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 50,
+        "maxAge": "7d",
+        "strategy": "performance"
+      }
+    }
+  ]
+}

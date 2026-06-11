@@ -1,0 +1,122 @@
+ion-header ion-toolbar {
+  --background: var(--md-bg);
+  --color: var(--md-text);
+  --border-color: var(--md-border);
+}
+
+.shared-content {
+  --background: var(--md-bg);
+}
+
+.shared-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 16px 14px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.shared-owner {
+  appearance: none;
+  border: 0;
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
+  border-radius: var(--md-radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+  transition: background var(--md-duration) var(--md-ease);
+
+  &:hover {
+    background: var(--md-surface-2);
+  }
+
+  &__avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--md-surface-2);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    ion-icon {
+      font-size: 2rem;
+      color: var(--md-text-dim);
+    }
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--md-text-muted);
+    font-weight: 600;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: var(--md-primary);
+  }
+
+  &__count {
+    font-size: 0.82rem;
+    color: var(--md-text-muted);
+    font-weight: 600;
+  }
+}
+
+.shared-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--md-text-muted);
+
+  h2 {
+    color: var(--md-text);
+    margin: 0 0 8px;
+  }
+
+  &__btn {
+    margin-top: 16px;
+    --background: var(--md-primary);
+    --color: #fff;
+  }
+}
+
+.shared-empty-list {
+  margin: 64px 0;
+  text-align: center;
+  color: var(--md-text-muted);
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 18px 12px;
+}
+
+@media (min-width: 768px) {
+  .grade {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 22px 16px;
+  }
+}
