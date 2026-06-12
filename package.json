@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/platform-browser-dynamic": "^20.0.0",
     "@angular/router": "^20.0.0",
-    "@angular/service-worker": "^20.3.21",
+    "@angular/service-worker": "^20.3.25",
     "@capacitor/app": "8.1.0",
     "@capacitor/core": "8.3.4",
     "@capacitor/haptics": "8.0.2",
