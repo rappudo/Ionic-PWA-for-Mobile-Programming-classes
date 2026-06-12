@@ -10,11 +10,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonBackButton,
+  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
+  IonLabel,
+  IonSegment,
+  IonSegmentButton,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -61,11 +65,15 @@ type FriendStatus = 'self' | 'friend' | 'incoming' | 'outgoing' | 'none';
   imports: [
     AnimeCoverComponent,
     IonBackButton,
+    IonBadge,
     IonButton,
     IonButtons,
     IonContent,
     IonHeader,
     IonIcon,
+    IonLabel,
+    IonSegment,
+    IonSegmentButton,
     IonTitle,
     IonToolbar,
     SkeletonGridComponent,
@@ -90,6 +98,7 @@ export class UserProfilePage implements OnInit {
   readonly loading = signal(true);
   readonly notFound = signal(false);
   readonly busy = signal(false);
+  readonly section = signal<'avaliacoes' | 'favoritos' | 'listas'>('avaliacoes');
 
   readonly statusCounts = computed<Record<WatchStatus, number>>(() => {
     const base: Record<WatchStatus, number> = {
@@ -117,6 +126,10 @@ export class UserProfilePage implements OnInit {
     }
     return this.match.matchWithExternal(this.ratings());
   });
+
+  onSegment(value: 'avaliacoes' | 'favoritos' | 'listas'): void {
+    this.section.set(value);
+  }
 
   matchLabel(score: number | null): string {
     if (score === null) return '';

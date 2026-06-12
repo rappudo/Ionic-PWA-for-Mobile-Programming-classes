@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
-  IonBackButton,
   IonButton,
-  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
@@ -16,17 +14,24 @@ import {
 import { AvatarCropperModalComponent } from '../components/avatar-cropper-modal/avatar-cropper-modal.component';
 import { addIcons } from 'ionicons';
 import {
+  bookmarksOutline,
   cameraOutline,
+  chevronForwardOutline,
   cloudDownloadOutline,
   logOutOutline,
+  moonOutline,
+  peopleOutline,
   personCircleOutline,
+  sparklesOutline,
   statsChartOutline,
+  sunnyOutline,
   tvOutline,
 } from 'ionicons/icons';
 
 import { AuthService } from '../services/auth.service';
 import { InstallPromptService } from '../services/install-prompt.service';
 import { SupabaseService } from '../services/supabase.service';
+import { ThemeService } from '../services/theme.service';
 import { UserAnimeService } from '../services/user-anime.service';
 import { formatWatchTime } from '../services/watch-time';
 
@@ -39,9 +44,7 @@ const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss'],
   imports: [
-    IonBackButton,
     IonButton,
-    IonButtons,
     IonContent,
     IonHeader,
     IonIcon,
@@ -58,7 +61,9 @@ export class ProfilePage {
   private readonly userData = inject(UserAnimeService);
   private readonly modalCtrl = inject(ModalController);
   private readonly installPrompt = inject(InstallPromptService);
+  private readonly themeService = inject(ThemeService);
 
+  readonly theme = this.themeService.theme;
   readonly canInstall = this.installPrompt.canInstall;
   readonly profile = this.auth.profile;
   readonly username = computed(() => this.profile()?.username ?? '');
@@ -72,13 +77,23 @@ export class ProfilePage {
 
   constructor() {
     addIcons({
+      'bookmarks-outline': bookmarksOutline,
       'camera-outline': cameraOutline,
+      'chevron-forward-outline': chevronForwardOutline,
       'cloud-download-outline': cloudDownloadOutline,
       'log-out-outline': logOutOutline,
+      'moon-outline': moonOutline,
+      'people-outline': peopleOutline,
       'person-circle-outline': personCircleOutline,
+      'sparkles-outline': sparklesOutline,
       'stats-chart-outline': statsChartOutline,
+      'sunny-outline': sunnyOutline,
       'tv-outline': tvOutline,
     });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggle();
   }
 
   async installApp(): Promise<void> {

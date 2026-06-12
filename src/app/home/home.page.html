@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="md-glass-toolbar">
     <ion-title>Animes</ion-title>
     <ion-buttons slot="end">
       <ion-button
@@ -12,56 +12,10 @@
           [name]="theme() === 'dark' ? 'sunny-outline' : 'moon-outline'"
         />
       </ion-button>
-      <ion-button
-        class="theme-toggle friends-btn"
-        routerLink="/feed"
-        aria-label="Feed dos amigos"
-      >
-        <ion-icon slot="icon-only" name="newspaper-outline" />
-        @if (pendingRecsCount() > 0) {
-          <ion-badge class="friends-btn__badge">{{ pendingRecsCount() }}</ion-badge>
-        }
-      </ion-button>
-      <ion-button
-        class="theme-toggle"
-        routerLink="/recommendations"
-        aria-label="Recomendações"
-      >
-        <ion-icon slot="icon-only" name="sparkles-outline" />
-      </ion-button>
-      <ion-button
-        class="theme-toggle"
-        routerLink="/lists"
-        aria-label="Minhas listas"
-      >
-        <ion-icon slot="icon-only" name="bookmarks-outline" />
-      </ion-button>
-      <ion-button
-        class="theme-toggle friends-btn"
-        routerLink="/friends"
-        aria-label="Amigos"
-      >
-        <ion-icon slot="icon-only" name="people-outline" />
-        @if (incomingFriendCount() > 0) {
-          <ion-badge class="friends-btn__badge">{{ incomingFriendCount() }}</ion-badge>
-        }
-      </ion-button>
-      <ion-button
-        class="profile-btn"
-        routerLink="/profile"
-        aria-label="Abrir perfil"
-      >
-        @if (profile()?.avatar_url; as url) {
-          <ion-avatar slot="icon-only" class="profile-btn__avatar">
-            <img [src]="url" alt="" />
-          </ion-avatar>
-        } @else {
-          <ion-icon slot="icon-only" name="person-circle-outline" />
-        }
-      </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar>
+
+  <ion-toolbar class="md-glass-toolbar">
     <div class="search-row">
       <ion-searchbar
         class="search-row__bar"
@@ -187,17 +141,69 @@
 
   @if (!catalogReady()) {
     <app-skeleton-grid [count]="18" />
-  } @else {
-    <div class="grade">
-      @for (anime of filtered(); track anime.id) {
-        <app-anime-cover [anime]="anime" (select)="openDetail($event)" />
-      } @empty {
-        @if (query().trim() || activeFilterCount() > 0) {
+  } @else if (isSearching()) {
+    <!-- Focused results grid while searching/filtering. -->
+    <div class="results">
+      <app-section-header
+        [title]="filtered().length + (filtered().length === 1 ? ' resultado' : ' resultados')"
+      />
+      <div class="grade md-stagger">
+        @for (anime of filtered(); track anime.id; let i = $index) {
+          <app-anime-cover [style.--i]="i" [anime]="anime" (select)="openDetail($event)" />
+        } @empty {
           <p class="empty">Nenhum anime corresponde aos filtros atuais.</p>
-        } @else {
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Discovery: hero + rails + full catalogue. -->
+    @if (heroAnime(); as hero) {
+      <app-hero-banner [anime]="hero" (select)="openDetail($event)" />
+    }
+
+    @if (continueWatching().length > 0) {
+      <app-media-rail
+        eyebrow="Retome de onde parou"
+        title="Continue assistindo"
+        [animes]="continueWatching()"
+        (select)="openDetail($event)"
+      />
+    }
+
+    <app-media-rail
+      eyebrow="Imperdíveis"
+      title="Veja imediatamente"
+      [animes]="mustWatch()"
+      (select)="openDetail($event)"
+    />
+
+    @if (favoriteAnimes().length > 0) {
+      <app-media-rail
+        eyebrow="Sua coleção"
+        title="Seus favoritos"
+        [animes]="favoriteAnimes()"
+        (select)="openDetail($event)"
+      />
+    }
+
+    @for (rail of genreRails(); track rail.genre) {
+      <app-media-rail
+        eyebrow="Gênero"
+        [title]="rail.genre"
+        [animes]="rail.animes"
+        (select)="openDetail($event)"
+      />
+    }
+
+    <div class="all-section md-section">
+      <app-section-header eyebrow="Catálogo completo" title="Todos os animes" />
+      <div class="grade md-stagger">
+        @for (anime of filtered(); track anime.id; let i = $index) {
+          <app-anime-cover [style.--i]="i" [anime]="anime" (select)="openDetail($event)" />
+        } @empty {
           <p class="empty">Nenhum anime carregado.</p>
         }
-      }
+      </div>
     </div>
   }
 </ion-content>

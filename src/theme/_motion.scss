@@ -1,0 +1,79 @@
+// Motion utilities — shared entrance animations and a stagger helper.
+// Global classes (declared here, surfaced via global.scss) cascade into
+// component templates even though component styles are view-encapsulated.
+//
+// Usage:
+//   <div class="md-reveal">            // single fade-up on mount
+//   <ul class="md-stagger">            // children fade-up in sequence;
+//     <li style="--i: 0">...           // set --i per child for the delay
+//
+// All motion is gated behind prefers-reduced-motion at the bottom.
+
+@keyframes md-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes md-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes md-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes md-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.md-reveal {
+  animation: md-fade-up var(--md-duration-slow) var(--md-ease-out) both;
+}
+
+.md-fade-in {
+  animation: md-fade-in var(--md-duration-slow) var(--md-ease-out) both;
+}
+
+// Stagger: each direct child animates in, delayed by its --i index.
+// Cap the multiplier so very long lists don't wait forever.
+.md-stagger > * {
+  animation: md-fade-up var(--md-duration-slow) var(--md-ease-out) both;
+  animation-delay: calc(min(var(--i, 0), 24) * 35ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-reveal,
+  .md-fade-in,
+  .md-stagger > * {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

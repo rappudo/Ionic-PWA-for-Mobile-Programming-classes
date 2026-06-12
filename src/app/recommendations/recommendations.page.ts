@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,7 +9,6 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import {
-  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -25,20 +23,16 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  chevronForwardOutline,
   diceOutline,
-  flameOutline,
-  peopleOutline,
   refreshOutline,
   sparklesOutline,
-  starOutline,
-  star as starFilled,
-  sunnyOutline,
 } from 'ionicons/icons';
 
-import { AnimeCoverComponent } from '../components/anime-cover/anime-cover.component';
 import { AnimeDetailModalComponent } from '../components/anime-detail-modal/anime-detail-modal.component';
+import { HeroBannerComponent } from '../components/hero-banner/hero-banner.component';
+import { MediaRailComponent } from '../components/media-rail/media-rail.component';
 import { SkeletonGridComponent } from '../components/skeleton/skeleton-grid.component';
-import { SkeletonRowComponent } from '../components/skeleton/skeleton-row.component';
 import { Anime, Recomendacao } from '../models/anime';
 import { Profile } from '../models/profile';
 import { AnimeRating, Favorite } from '../models/user-anime';
@@ -74,9 +68,8 @@ const RECOMENDACAO_RANK: Record<Recomendacao, number> = {
   templateUrl: 'recommendations.page.html',
   styleUrls: ['recommendations.page.scss'],
   imports: [
-    AnimeCoverComponent,
-    DecimalPipe,
-    IonBackButton,
+    HeroBannerComponent,
+    MediaRailComponent,
     IonButton,
     IonButtons,
     IonContent,
@@ -88,7 +81,6 @@ const RECOMENDACAO_RANK: Record<Recomendacao, number> = {
     IonToolbar,
     RouterLink,
     SkeletonGridComponent,
-    SkeletonRowComponent,
   ],
 })
 export class RecommendationsPage implements OnInit {
@@ -259,16 +251,21 @@ export class RecommendationsPage implements OnInit {
     return recs.slice(0, 10);
   });
 
+  // Flattened anime lists for the rails.
+  readonly trendingAnimes = computed<Anime[]>(() => this.trendingItems().map((t) => t.anime));
+  readonly friendRecAnimes = computed<Anime[]>(() => this.friendRecs().map((r) => r.anime));
+
+  // Guidance shown when we have nothing personalised to suggest yet.
+  readonly showOnboardingHint = computed(
+    () => this.personalRecs().length === 0 && this.friendRecAnimes().length === 0,
+  );
+
   constructor() {
     addIcons({
+      'chevron-forward-outline': chevronForwardOutline,
       'dice-outline': diceOutline,
-      'flame-outline': flameOutline,
-      'people-outline': peopleOutline,
       'refresh-outline': refreshOutline,
       'sparkles-outline': sparklesOutline,
-      'star-outline': starOutline,
-      star: starFilled,
-      'sunny-outline': sunnyOutline,
     });
   }
 

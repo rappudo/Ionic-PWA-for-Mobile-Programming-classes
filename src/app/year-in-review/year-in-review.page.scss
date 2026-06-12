@@ -1,11 +1,24 @@
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .yir-content {
   --background: var(--md-bg);
+}
+
+ion-content::part(scroll) {
+  padding-bottom: var(--md-space-6);
 }
 
 .yir-wrap {

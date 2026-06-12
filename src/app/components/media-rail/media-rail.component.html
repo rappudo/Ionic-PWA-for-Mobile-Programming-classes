@@ -1,0 +1,40 @@
+@if (animes().length > 0) {
+  <section class="rail md-section">
+    @if (title()) {
+      <app-section-header
+        [title]="title()!"
+        [eyebrow]="eyebrow()"
+        [actionLabel]="actionLabel()"
+        (action)="action.emit()"
+      />
+    }
+
+    <div class="rail__wrap">
+      <button
+        type="button"
+        class="rail__nav rail__nav--prev"
+        aria-label="Rolar para trás"
+        (click)="scrollBy(-1)"
+      >
+        <ion-icon name="chevron-back" aria-hidden="true" />
+      </button>
+
+      <div class="rail__scroller md-scroller" #scroller>
+        @for (anime of animes(); track anime.id) {
+          <div class="rail__item">
+            <app-anime-cover [anime]="anime" (select)="select.emit($event)" />
+          </div>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="rail__nav rail__nav--next"
+        aria-label="Rolar para frente"
+        (click)="scrollBy(1)"
+      >
+        <ion-icon name="chevron-forward" aria-hidden="true" />
+      </button>
+    </div>
+  </section>
+}

@@ -1,0 +1,80 @@
+:host {
+  display: block;
+}
+
+.rail__wrap {
+  position: relative;
+}
+
+// Each cover sits in a fixed-width slot; the cover itself is fluid (width:100%).
+.rail__item {
+  width: var(--rail-item-w, 128px);
+}
+
+@media (min-width: 768px) {
+  .rail__item {
+    width: var(--rail-item-w, 148px);
+  }
+}
+
+// Desktop scroll buttons — hidden on touch, revealed on hover over the rail.
+.rail__nav {
+  display: none;
+}
+
+@media (min-width: 768px) and (hover: hover) {
+  .rail__nav {
+    position: absolute;
+    top: 0;
+    bottom: 28px; // leave the title row of the cover uncovered
+    width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    cursor: pointer;
+    z-index: 3;
+    color: var(--md-text);
+    background: transparent;
+    opacity: 0;
+    transition: opacity var(--md-duration) var(--md-ease);
+
+    ion-icon {
+      font-size: 22px;
+      padding: 6px;
+      border-radius: 50%;
+      background: var(--md-glass-bg);
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--md-glass-border);
+      box-shadow: var(--md-shadow-2);
+    }
+
+    &--prev {
+      left: 0;
+      background: linear-gradient(to right, var(--md-rail-edge), transparent);
+      justify-content: flex-start;
+      padding-left: 4px;
+    }
+
+    &--next {
+      right: 0;
+      background: linear-gradient(to left, var(--md-rail-edge), transparent);
+      justify-content: flex-end;
+      padding-right: 4px;
+    }
+  }
+
+  .rail__wrap:hover .rail__nav {
+    opacity: 1;
+  }
+
+  .rail__nav:focus-visible {
+    opacity: 1;
+    outline: none;
+
+    ion-icon {
+      box-shadow: 0 0 0 2px var(--md-primary), var(--md-shadow-2);
+    }
+  }
+}

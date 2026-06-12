@@ -1,12 +1,13 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" />
-    </ion-buttons>
-    <ion-title>Recomendações</ion-title>
+  <ion-toolbar class="md-glass-toolbar">
+    <ion-title>Descobrir</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="refresh()" aria-label="Recarregar amigos" [disabled]="refreshing()">
-        <ion-icon slot="icon-only" name="refresh-outline" />
+      <ion-button (click)="refresh()" aria-label="Recarregar" [disabled]="refreshing()">
+        <ion-icon
+          slot="icon-only"
+          name="refresh-outline"
+          [class.is-spinning]="refreshing()"
+        />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -18,152 +19,55 @@
   </ion-refresher>
 
   @if (loading()) {
-    <div class="recs-wrap">
-      <div class="daily-card daily-card--sk"></div>
+    <div class="recs-skeleton">
+      <div class="daily-card--sk"></div>
       <app-skeleton-grid [count]="6" />
-      <app-skeleton-row [count]="3" [avatar]="false" />
     </div>
   } @else {
-    <div class="recs-wrap">
-      <a class="surprise-cta" routerLink="/surprise">
-        <div class="surprise-cta__icon">
-          <ion-icon name="dice-outline" aria-hidden="true" />
-        </div>
-        <div class="surprise-cta__body">
-          <span class="surprise-cta__title">Não sabe o que assistir?</span>
-          <span class="surprise-cta__sub">Sortear um anime aleatório com filtros</span>
-        </div>
-      </a>
+    @if (dailyPick(); as anime) {
+      <app-hero-banner [anime]="anime" (select)="openAnime($event)" />
+    }
 
-      <section class="daily">
-        <h2 class="recs-section__title">
-          <ion-icon name="sunny-outline" aria-hidden="true" />
-          Anime do dia
-        </h2>
-        @if (dailyPick(); as anime) {
-          <button type="button" class="daily-card" (click)="openAnime(anime)">
-            <div class="daily-card__media">
-              @if (anime.imagem; as src) {
-                <img [src]="src" [alt]="anime.nome[0]" loading="lazy" />
-              } @else {
-                <span class="daily-card__placeholder">{{ anime.nome[0] }}</span>
-              }
-            </div>
-            <div class="daily-card__info">
-              <h3 class="daily-card__title">{{ anime.nome[0] }}</h3>
-              <p class="daily-card__synopsis">{{ anime.sinopse }}</p>
-              <div class="daily-card__meta">
-                @for (g of anime.generos.slice(0, 4); track g) {
-                  <span class="chip">{{ g }}</span>
-                }
-              </div>
-            </div>
-          </button>
-        } @else {
-          <p class="recs-empty">Catálogo vazio.</p>
-        }
-      </section>
+    <a class="surprise-cta" routerLink="/surprise">
+      <div class="surprise-cta__icon">
+        <ion-icon name="dice-outline" aria-hidden="true" />
+      </div>
+      <div class="surprise-cta__body">
+        <span class="surprise-cta__title">Não sabe o que assistir?</span>
+        <span class="surprise-cta__sub">Sortear um anime aleatório com filtros</span>
+      </div>
+      <ion-icon class="surprise-cta__arrow" name="chevron-forward-outline" aria-hidden="true" />
+    </a>
 
-      <section class="recs-section">
-        <h2 class="recs-section__title">
-          <ion-icon name="flame-outline" aria-hidden="true" />
-          Bombando na semana
-        </h2>
-        @if (trendingItems().length === 0) {
-          <p class="recs-empty">
-            Sem movimento esta semana — volte mais tarde.
-          </p>
-        } @else {
-          <div class="trending-strip">
-            @for (item of trendingItems(); track item.anime.id; let i = $index) {
-              <button
-                type="button"
-                class="trending-card"
-                [attr.aria-label]="item.anime.nome[0]"
-                (click)="openAnime(item.anime)"
-              >
-                <span class="trending-card__rank">#{{ i + 1 }}</span>
-                <span class="trending-card__media">
-                  @if (item.anime.imagem; as src) {
-                    <img [src]="src" [alt]="item.anime.nome[0]" loading="lazy" />
-                  } @else {
-                    <span class="trending-card__placeholder">{{ item.anime.nome[0] }}</span>
-                  }
-                </span>
-                <span class="trending-card__title">{{ item.anime.nome[0] }}</span>
-                <span class="trending-card__meta">
-                  <ion-icon name="people-outline" aria-hidden="true" />
-                  {{ item.uniqueUsers }}
-                </span>
-              </button>
-            }
-          </div>
-        }
-      </section>
+    <app-media-rail
+      eyebrow="Bombando"
+      title="Em alta na semana"
+      [animes]="trendingAnimes()"
+      (select)="openAnime($event)"
+    />
 
-      <section class="recs-section">
-        <h2 class="recs-section__title">
-          <ion-icon name="sparkles-outline" aria-hidden="true" />
-          Pra você
-        </h2>
-        @if (personalRecs().length === 0) {
-          <p class="recs-empty">
-            Avalie alguns animes com nota 7+ ou marque favoritos pra eu aprender seu gosto.
-          </p>
-        } @else {
-          <div class="grade">
-            @for (anime of personalRecs(); track anime.id) {
-              <app-anime-cover [anime]="anime" (select)="openAnime($event)" />
-            }
-          </div>
-        }
-      </section>
+    <app-media-rail
+      eyebrow="Sob medida"
+      title="Pra você"
+      [animes]="personalRecs()"
+      (select)="openAnime($event)"
+    />
 
-      <section class="recs-section">
-        <h2 class="recs-section__title">
-          <ion-icon name="people-outline" aria-hidden="true" />
-          Dos seus amigos
-        </h2>
-        @if (friendRecs().length === 0) {
-          <p class="recs-empty">
-            Adicione amigos e veja o que eles recomendam aqui.
-          </p>
-        } @else {
-          <ul class="friend-recs">
-            @for (rec of friendRecs(); track rec.anime.id) {
-              <li class="friend-rec" (click)="openAnime(rec.anime)">
-                <div class="friend-rec__cover">
-                  @if (rec.anime.imagem; as src) {
-                    <img [src]="src" [alt]="rec.anime.nome[0]" loading="lazy" />
-                  } @else {
-                    <span class="friend-rec__placeholder">{{ rec.anime.nome[0] }}</span>
-                  }
-                </div>
-                <div class="friend-rec__body">
-                  <h3 class="friend-rec__title">{{ rec.anime.nome[0] }}</h3>
-                  <div class="friend-rec__meta">
-                    @if (rec.avgScore > 0) {
-                      <span class="friend-rec__score">
-                        <ion-icon name="star" aria-hidden="true" />
-                        {{ rec.avgScore | number: '1.1-1' }}
-                      </span>
-                    }
-                    <span class="friend-rec__by">
-                      Por
-                      @for (r of rec.recommenders.slice(0, 3); track r.username; let i = $index) {
-                        <span class="friend-rec__friend">@{{ r.username }}</span>{{ i < (rec.recommenders.length > 3 ? 3 : rec.recommenders.length) - 1 ? ', ' : '' }}
-                      }
-                      @if (rec.recommenders.length > 3) {
-                        <span class="friend-rec__more">+{{ rec.recommenders.length - 3 }}</span>
-                      }
-                    </span>
-                  </div>
-                </div>
-              </li>
-            }
-          </ul>
-        }
-      </section>
-    </div>
+    <app-media-rail
+      eyebrow="Curadoria dos amigos"
+      title="Dos seus amigos"
+      [animes]="friendRecAnimes()"
+      (select)="openAnime($event)"
+    />
+
+    @if (showOnboardingHint()) {
+      <div class="hint md-reveal">
+        <ion-icon name="sparkles-outline" aria-hidden="true" />
+        <p class="hint__text">
+          Avalie animes com nota <strong>7+</strong>, marque favoritos e adicione amigos —
+          quanto mais você usar, mais certeiras ficam as recomendações aqui.
+        </p>
+      </div>
+    }
   }
 </ion-content>

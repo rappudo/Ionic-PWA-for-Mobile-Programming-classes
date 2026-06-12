@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="md-glass-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" />
+      <ion-back-button defaultHref="/feed" />
     </ion-buttons>
     <ion-title>Amigos</ion-title>
   </ion-toolbar>
@@ -80,7 +80,7 @@
           Pedidos recebidos
           <span class="friends-section__count">{{ pendingIncoming().length }}</span>
         </h2>
-        <ul class="friends-list">
+        <ul class="friends-list md-stagger">
           @for (view of pendingIncoming(); track view.other.id) {
             <li class="friend-row" (click)="openProfile(view.other.username)">
               <div class="friend-row__avatar">
@@ -120,7 +120,7 @@
     @if (pendingOutgoing().length) {
       <section class="friends-section">
         <h2 class="friends-section__title">Pedidos enviados</h2>
-        <ul class="friends-list">
+        <ul class="friends-list md-stagger">
           @for (view of pendingOutgoing(); track view.other.id) {
             <li class="friend-row" (click)="openProfile(view.other.username)">
               <div class="friend-row__avatar">
@@ -162,7 +162,7 @@
           Você ainda não tem amigos. Adicione pelo ID acima.
         </p>
       } @else {
-        <ul class="friends-list">
+        <ul class="friends-list md-stagger">
           @for (view of accepted(); track view.other.id) {
             <li class="friend-row" (click)="openProfile(view.other.username)">
               <div class="friend-row__avatar">

@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="md-glass-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/friends" />
+      <ion-back-button defaultHref="/feed" />
     </ion-buttons>
     <ion-title>{{ profile() ? ('@' + profile()!.username) : 'Perfil' }}</ion-title>
   </ion-toolbar>
@@ -22,7 +22,9 @@
     <p class="user-empty">Usuário não encontrado.</p>
   } @else if (profile(); as p) {
     <div class="user-wrap">
-      <header class="user-header">
+      <header class="user-header md-reveal">
+        <div class="user-header__glow" aria-hidden="true"></div>
+
         <div class="user-avatar">
           @if (p.avatar_url; as url) {
             <img [src]="url" [alt]="p.username" />
@@ -55,20 +57,6 @@
           <div class="user-stat">
             <span class="user-stat__value">{{ statusCounts().planejado }}</span>
             <span class="user-stat__label">planejados</span>
-          </div>
-        </div>
-        <div class="user-stats user-stats--sub">
-          <div class="user-stat">
-            <span class="user-stat__value">{{ ratedItems().length }}</span>
-            <span class="user-stat__label">avaliados</span>
-          </div>
-          <div class="user-stat">
-            <span class="user-stat__value">{{ favoriteAnimes().length }}</span>
-            <span class="user-stat__label">favoritos</span>
-          </div>
-          <div class="user-stat">
-            <span class="user-stat__value">{{ lists().length }}</span>
-            <span class="user-stat__label">listas</span>
           </div>
         </div>
 
@@ -110,21 +98,13 @@
             </ion-button>
           }
           @case ('incoming') {
-            <ion-button
-              class="user-action"
-              [disabled]="busy()"
-              (click)="acceptFriend()"
-            >
+            <ion-button class="user-action" [disabled]="busy()" (click)="acceptFriend()">
               <ion-icon slot="start" name="checkmark-outline" />
               Aceitar pedido
             </ion-button>
           }
           @case ('none') {
-            <ion-button
-              class="user-action"
-              [disabled]="busy()"
-              (click)="addFriend()"
-            >
+            <ion-button class="user-action" [disabled]="busy()" (click)="addFriend()">
               <ion-icon slot="start" name="person-add-outline" />
               Adicionar amigo
             </ion-button>
@@ -132,100 +112,120 @@
         }
       </header>
 
-      @if (ratedItems().length > 0) {
-        <section class="user-section">
-          <h2 class="user-section__title">Avaliações</h2>
-          <ul class="rated-list">
-            @for (item of ratedItems(); track item.anime.id) {
-              <li class="rated-row">
-                <button
-                  type="button"
-                  class="rated-row__main"
-                  (click)="openAnime(item.anime)"
-                >
-                  <div class="rated-row__cover">
-                    @if (item.anime.imagem; as src) {
-                      <img [src]="src" [alt]="item.anime.nome[0]" loading="lazy" />
-                    } @else {
-                      <span class="rated-row__placeholder">{{ item.anime.nome[0] }}</span>
-                    }
-                  </div>
-                  <div class="rated-row__info">
-                    <span class="rated-row__title">{{ item.anime.nome[0] }}</span>
-                    @if (item.rating.score !== null) {
-                      <span class="rated-row__score">{{ item.rating.score }}/10</span>
-                    }
-                    @if (item.rating.comment) {
-                      <p class="rated-row__comment">{{ item.rating.comment }}</p>
-                    }
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  class="rated-row__comment-btn"
-                  aria-label="Comentar"
-                  (click)="openThread(item)"
-                >
-                  <ion-icon name="chatbubble-outline" />
-                </button>
-              </li>
-            }
-          </ul>
-        </section>
-      }
-
-      @if (favoriteAnimes().length > 0) {
-        <section class="user-section">
-          <h2 class="user-section__title">Favoritos</h2>
-          <div class="grade">
-            @for (anime of favoriteAnimes(); track anime.id) {
-              <app-anime-cover [anime]="anime" (select)="openAnime($event)" />
-            }
-          </div>
-        </section>
-      }
-
-      @if (lists().length > 0) {
-        <section class="user-section">
-          <h2 class="user-section__title">Listas</h2>
-          @for (list of lists(); track list.id) {
-            <div class="user-list">
-              <div class="user-list__header">
-                <h3 class="user-list__name">{{ list.name }}</h3>
-                <span class="user-list__count">
-                  {{ list.anime_ids.length }}
-                  {{ list.anime_ids.length === 1 ? 'anime' : 'animes' }}
-                </span>
-              </div>
-              @if (previewAnimes(list, 12).length > 0) {
-                <div class="user-list__strip">
-                  @for (anime of previewAnimes(list, 12); track anime.id) {
-                    <button
-                      type="button"
-                      class="strip-cover"
-                      [attr.aria-label]="anime.nome[0]"
-                      (click)="openAnime(anime)"
-                    >
-                      @if (anime.imagem; as src) {
-                        <img [src]="src" [alt]="anime.nome[0]" loading="lazy" />
-                      } @else {
-                        <span class="strip-cover__placeholder">{{ anime.nome[0] }}</span>
-                      }
-                    </button>
-                  }
-                </div>
-              }
-            </div>
-          }
-        </section>
-      }
-
       @if (
-        ratedItems().length === 0
-        && favoriteAnimes().length === 0
-        && lists().length === 0
+        ratedItems().length === 0 && favoriteAnimes().length === 0 && lists().length === 0
       ) {
         <p class="user-empty">Este usuário ainda não tem atividade.</p>
+      } @else {
+        <ion-segment
+          class="user-segment"
+          [value]="section()"
+          (ionChange)="onSegment($any($event.detail.value))"
+        >
+          <ion-segment-button value="avaliacoes">
+            <ion-label>Avaliações</ion-label>
+            <ion-badge class="user-segment__badge">{{ ratedItems().length }}</ion-badge>
+          </ion-segment-button>
+          <ion-segment-button value="favoritos">
+            <ion-label>Favoritos</ion-label>
+            <ion-badge class="user-segment__badge">{{ favoriteAnimes().length }}</ion-badge>
+          </ion-segment-button>
+          <ion-segment-button value="listas">
+            <ion-label>Listas</ion-label>
+            <ion-badge class="user-segment__badge">{{ lists().length }}</ion-badge>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div class="user-section-body">
+          @switch (section()) {
+            @case ('avaliacoes') {
+              @if (ratedItems().length > 0) {
+                <ul class="rated-list md-stagger">
+                  @for (item of ratedItems(); track item.anime.id; let i = $index) {
+                    <li class="rated-row" [style.--i]="i">
+                      <button type="button" class="rated-row__main" (click)="openAnime(item.anime)">
+                        <div class="rated-row__cover">
+                          @if (item.anime.imagem; as src) {
+                            <img [src]="src" [alt]="item.anime.nome[0]" loading="lazy" />
+                          } @else {
+                            <span class="rated-row__placeholder">{{ item.anime.nome[0] }}</span>
+                          }
+                        </div>
+                        <div class="rated-row__info">
+                          <span class="rated-row__title">{{ item.anime.nome[0] }}</span>
+                          @if (item.rating.score !== null) {
+                            <span class="rated-row__score">{{ item.rating.score }}/10</span>
+                          }
+                          @if (item.rating.comment) {
+                            <p class="rated-row__comment">{{ item.rating.comment }}</p>
+                          }
+                        </div>
+                      </button>
+                      <button
+                        type="button"
+                        class="rated-row__comment-btn"
+                        aria-label="Comentar"
+                        (click)="openThread(item)"
+                      >
+                        <ion-icon name="chatbubble-outline" />
+                      </button>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="user-empty user-empty--small">Nenhuma avaliação ainda.</p>
+              }
+            }
+
+            @case ('favoritos') {
+              @if (favoriteAnimes().length > 0) {
+                <div class="grade md-stagger">
+                  @for (anime of favoriteAnimes(); track anime.id; let i = $index) {
+                    <app-anime-cover [style.--i]="i" [anime]="anime" (select)="openAnime($event)" />
+                  }
+                </div>
+              } @else {
+                <p class="user-empty user-empty--small">Nenhum favorito ainda.</p>
+              }
+            }
+
+            @case ('listas') {
+              @if (lists().length > 0) {
+                @for (list of lists(); track list.id) {
+                  <div class="user-list">
+                    <div class="user-list__header">
+                      <h3 class="user-list__name">{{ list.name }}</h3>
+                      <span class="user-list__count">
+                        {{ list.anime_ids.length }}
+                        {{ list.anime_ids.length === 1 ? 'anime' : 'animes' }}
+                      </span>
+                    </div>
+                    @if (previewAnimes(list, 12).length > 0) {
+                      <div class="user-list__strip">
+                        @for (anime of previewAnimes(list, 12); track anime.id) {
+                          <button
+                            type="button"
+                            class="strip-cover"
+                            [attr.aria-label]="anime.nome[0]"
+                            (click)="openAnime(anime)"
+                          >
+                            @if (anime.imagem; as src) {
+                              <img [src]="src" [alt]="anime.nome[0]" loading="lazy" />
+                            } @else {
+                              <span class="strip-cover__placeholder">{{ anime.nome[0] }}</span>
+                            }
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              } @else {
+                <p class="user-empty user-empty--small">Nenhuma lista pública.</p>
+              }
+            }
+          }
+        </div>
       }
     </div>
   }

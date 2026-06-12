@@ -1,15 +1,14 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" />
-    </ion-buttons>
+  <ion-toolbar class="md-glass-toolbar">
     <ion-title>Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="profile-content">
   <div class="profile-wrap">
-    <div class="profile-card">
+    <!-- Cinematic identity header -->
+    <header class="profile-hero md-reveal">
+      <div class="profile-hero__glow" aria-hidden="true"></div>
       <div class="profile-avatar">
         @if (avatarUrl(); as url) {
           <img [src]="url" alt="Avatar" />
@@ -19,71 +18,94 @@
         @if (uploading()) {
           <div class="profile-avatar__overlay"><ion-spinner name="crescent" /></div>
         }
+        <label class="profile-avatar__edit" [class.is-disabled]="uploading()">
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            [disabled]="uploading()"
+            (change)="onPickFile($event)"
+          />
+          <ion-icon name="camera-outline" aria-hidden="true" />
+        </label>
       </div>
 
-      <h2 class="profile-username">@{{ username() }}</h2>
+      <h2 class="profile-username">{{ '@' + username() }}</h2>
 
-      <div class="watch-card">
+      <div class="profile-watch">
         <ion-icon name="tv-outline" aria-hidden="true" />
-        <div class="watch-card__value">
-          <span class="watch-card__primary">{{ watchTime().primary }}</span>
-          @if (watchTime().secondary; as secondary) {
-            <span class="watch-card__secondary">{{ secondary }}</span>
-          }
-        </div>
-        <span class="watch-card__label">assistidos</span>
+        <span class="profile-watch__primary">{{ watchTime().primary }}</span>
+        @if (watchTime().secondary; as secondary) {
+          <span class="profile-watch__secondary">{{ secondary }}</span>
+        }
+        <span class="profile-watch__label">assistidos</span>
       </div>
+    </header>
 
-      <div class="profile-stats">
-        <div class="profile-stat">
-          <span class="profile-stat__value">{{ statusCounts().assistindo }}</span>
-          <span class="profile-stat__label">assistindo</span>
-        </div>
-        <div class="profile-stat">
-          <span class="profile-stat__value">{{ statusCounts().concluido }}</span>
-          <span class="profile-stat__label">concluídos</span>
-        </div>
-        <div class="profile-stat">
-          <span class="profile-stat__value">{{ statusCounts().planejado }}</span>
-          <span class="profile-stat__label">planejados</span>
-        </div>
-      </div>
-      <div class="profile-stats profile-stats--sub">
-        <div class="profile-stat">
-          <span class="profile-stat__value">{{ ratedCount() }}</span>
-          <span class="profile-stat__label">avaliados</span>
-        </div>
-        <div class="profile-stat">
-          <span class="profile-stat__value">{{ favoritesCount() }}</span>
-          <span class="profile-stat__label">favoritos</span>
-        </div>
-      </div>
+    @if (error(); as message) {
+      <p class="profile-error" role="alert">{{ message }}</p>
+    }
 
-      <label class="profile-upload-btn">
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          [disabled]="uploading()"
-          (change)="onPickFile($event)"
+    <!-- Stats -->
+    <div class="profile-stats md-reveal">
+      <div class="profile-stat">
+        <span class="profile-stat__value">{{ statusCounts().assistindo }}</span>
+        <span class="profile-stat__label">assistindo</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">{{ statusCounts().concluido }}</span>
+        <span class="profile-stat__label">concluídos</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">{{ statusCounts().planejado }}</span>
+        <span class="profile-stat__label">planejados</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">{{ ratedCount() }}</span>
+        <span class="profile-stat__label">avaliados</span>
+      </div>
+      <div class="profile-stat">
+        <span class="profile-stat__value">{{ favoritesCount() }}</span>
+        <span class="profile-stat__label">favoritos</span>
+      </div>
+    </div>
+
+    <!-- Quick links -->
+    <nav class="profile-links">
+      <a class="link-row" routerLink="/lists">
+        <ion-icon class="link-row__icon" name="bookmarks-outline" aria-hidden="true" />
+        <span class="link-row__label">Minhas listas</span>
+        <ion-icon class="link-row__chevron" name="chevron-forward-outline" aria-hidden="true" />
+      </a>
+      <a class="link-row" routerLink="/stats">
+        <ion-icon class="link-row__icon" name="stats-chart-outline" aria-hidden="true" />
+        <span class="link-row__label">Estatísticas</span>
+        <ion-icon class="link-row__chevron" name="chevron-forward-outline" aria-hidden="true" />
+      </a>
+      <a class="link-row" routerLink="/year-in-review">
+        <ion-icon class="link-row__icon" name="sparkles-outline" aria-hidden="true" />
+        <span class="link-row__label">Retrospectiva do ano</span>
+        <ion-icon class="link-row__chevron" name="chevron-forward-outline" aria-hidden="true" />
+      </a>
+      <a class="link-row" routerLink="/friends">
+        <ion-icon class="link-row__icon" name="people-outline" aria-hidden="true" />
+        <span class="link-row__label">Amigos</span>
+        <ion-icon class="link-row__chevron" name="chevron-forward-outline" aria-hidden="true" />
+      </a>
+
+      <!-- Theme toggle -->
+      <button type="button" class="link-row" (click)="toggleTheme()">
+        <ion-icon
+          class="link-row__icon"
+          [name]="theme() === 'dark' ? 'moon-outline' : 'sunny-outline'"
+          aria-hidden="true"
         />
-        <ion-icon name="camera-outline" />
-        <span>{{ avatarUrl() ? 'Trocar foto' : 'Adicionar foto' }}</span>
-      </label>
+        <span class="link-row__label">Aparência</span>
+        <span class="link-row__value">{{ theme() === 'dark' ? 'Escuro' : 'Claro' }}</span>
+      </button>
+    </nav>
 
-      @if (error(); as message) {
-        <p class="profile-error" role="alert">{{ message }}</p>
-      }
-
-      <ion-button
-        expand="block"
-        class="profile-stats-btn"
-        routerLink="/stats"
-      >
-        <ion-icon slot="start" name="stats-chart-outline" />
-        Ver estatísticas
-      </ion-button>
-
+    <div class="profile-actions">
       @if (canInstall()) {
         <ion-button
           expand="block"

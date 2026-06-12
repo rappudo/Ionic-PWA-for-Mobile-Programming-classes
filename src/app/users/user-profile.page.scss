@@ -1,11 +1,68 @@
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
 }
 
 .user-profile-content {
   --background: var(--md-bg);
+}
+
+ion-content::part(scroll) {
+  padding-bottom: var(--md-space-6);
+}
+
+// Cinematic glow behind the identity header.
+.user-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.user-header__glow {
+  position: absolute;
+  top: -45%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 320px;
+  background: radial-gradient(circle at 50% 0%, var(--md-primary-glow), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.user-header > *:not(.user-header__glow) {
+  position: relative;
+  z-index: 1;
+}
+
+// Section switcher ---------------------------------------------------------
+.user-segment {
+  --background: var(--md-surface-2);
+  max-width: 560px;
+  margin: var(--md-space-2) auto var(--md-space-4);
+  padding: 0 var(--md-page-pad);
+}
+
+.user-segment__badge {
+  margin-left: 6px;
+  --background: var(--md-surface-3);
+  --color: var(--md-text-muted);
+  font-size: 0.62rem;
+  min-width: 16px;
+  height: 16px;
+}
+
+.user-section-body {
+  padding: 0 var(--md-page-pad);
+}
+
+.user-empty--small {
+  margin: var(--md-space-6) auto;
+  font-size: var(--md-text-sm);
 }
 
 .user-loading {
@@ -273,21 +330,6 @@ ion-header ion-toolbar {
   text-transform: none;
   letter-spacing: 0;
   font-weight: 600;
-}
-
-.user-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  &__title {
-    margin: 0;
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--md-text-muted);
-    font-weight: 600;
-  }
 }
 
 .rated-list {

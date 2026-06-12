@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import {
-  IonAvatar,
   IonBadge,
   IonButton,
   IonButtons,
@@ -22,21 +20,19 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  bookmarksOutline,
   chevronDownOutline,
   chevronForwardOutline,
   closeOutline,
   moonOutline,
-  newspaperOutline,
-  peopleOutline,
-  personCircleOutline,
-  sparklesOutline,
   sunnyOutline,
 } from 'ionicons/icons';
 
 import { AnimeCoverComponent } from '../components/anime-cover/anime-cover.component';
 import { AnimeDetailModalComponent } from '../components/anime-detail-modal/anime-detail-modal.component';
 import { FilterPickerModalComponent } from '../components/filter-picker-modal/filter-picker-modal.component';
+import { HeroBannerComponent } from '../components/hero-banner/hero-banner.component';
+import { MediaRailComponent } from '../components/media-rail/media-rail.component';
+import { SectionHeaderComponent } from '../components/section-header/section-header.component';
 import { SkeletonGridComponent } from '../components/skeleton/skeleton-grid.component';
 import { Anime, ClassificacaoIndicativa, Recomendacao } from '../models/anime';
 import { RECOMENDACAO_META } from '../models/recomendacao';
@@ -111,7 +107,9 @@ function uniqueSorted(values: readonly string[]): string[] {
   styleUrls: ['home.page.scss'],
   imports: [
     AnimeCoverComponent,
-    IonAvatar,
+    HeroBannerComponent,
+    MediaRailComponent,
+    SectionHeaderComponent,
     IonBadge,
     IonButton,
     IonButtons,
@@ -125,7 +123,6 @@ function uniqueSorted(values: readonly string[]): string[] {
     IonSelectOption,
     IonTitle,
     IonToolbar,
-    RouterLink,
     SkeletonGridComponent,
   ],
 })
@@ -206,17 +203,75 @@ export class HomePage {
     return this.applySort(afterFilters, this.sortBy());
   });
 
+  // True while the user is actively searching/filtering: the discovery
+  // hero + rails give way to a focused results grid.
+  readonly isSearching = computed(
+    () => this.query().trim().length > 0 || this.activeFilterCount() > 0,
+  );
+
+  private readonly statuses = this.userDataService.statuses;
+  private readonly favoriteIds = this.userDataService.favorites;
+
+  private readonly byId = computed(() => new Map(this.animes().map((a) => [a.id, a])));
+
+  // Featured banner: a top-priority title with artwork, rotated daily.
+  readonly heroAnime = computed<Anime | null>(() => {
+    const withImage = this.animes().filter((a) => a.imagem);
+    if (withImage.length === 0) return null;
+    const featured = withImage.filter((a) => a.recomendacao === 'veja_imediatamente');
+    const pool = featured.length > 0 ? featured : withImage;
+    return pool[this.dailyIndex(pool.length)];
+  });
+
+  readonly continueWatching = computed<Anime[]>(() => {
+    const map = this.byId();
+    return [...this.statuses().values()]
+      .filter((s) => s.status === 'assistindo')
+      .sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''))
+      .map((s) => map.get(s.anime_id))
+      .filter((a): a is Anime => a !== undefined);
+  });
+
+  readonly favoriteAnimes = computed<Anime[]>(() => {
+    const favs = this.favoriteIds();
+    return this.animes().filter((a) => favs.has(a.id));
+  });
+
+  readonly mustWatch = computed<Anime[]>(() =>
+    this.animes()
+      .filter((a) => a.recomendacao === 'veja_imediatamente')
+      .slice(0, 20),
+  );
+
+  // A rail per popular genre (top 4 by catalog frequency).
+  readonly genreRails = computed<{ genre: string; animes: Anime[] }[]>(() => {
+    const counts = new Map<string, number>();
+    for (const a of this.animes()) {
+      for (const g of a.generos) counts.set(g, (counts.get(g) ?? 0) + 1);
+    }
+    const topGenres = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([g]) => g);
+    return topGenres.map((genre) => ({
+      genre,
+      animes: this.animes()
+        .filter((a) => a.generos.includes(genre))
+        .slice(0, 18),
+    }));
+  });
+
+  private dailyIndex(length: number): number {
+    const day = Math.floor(Date.now() / 86_400_000);
+    return ((day % length) + length) % length;
+  }
+
   constructor() {
     addIcons({
-      'bookmarks-outline': bookmarksOutline,
       'chevron-down-outline': chevronDownOutline,
       'chevron-forward-outline': chevronForwardOutline,
       'close-outline': closeOutline,
       'moon-outline': moonOutline,
-      'newspaper-outline': newspaperOutline,
-      'people-outline': peopleOutline,
-      'person-circle-outline': personCircleOutline,
-      'sparkles-outline': sparklesOutline,
       'sunny-outline': sunnyOutline,
     });
   }

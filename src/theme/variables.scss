@@ -12,7 +12,35 @@
   --md-radius-lg: 12px;
 
   --md-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  // Expressive ease-out for entrance motion (decelerating, no overshoot).
+  --md-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --md-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --md-duration: 180ms;
+  --md-duration-slow: 360ms;
+
+  // Typographic scale (shared across themes).
+  --md-text-2xs: 0.68rem;
+  --md-text-xs: 0.75rem;
+  --md-text-sm: 0.85rem;
+  --md-text-base: 0.95rem;
+  --md-text-lg: 1.15rem;
+  --md-text-xl: 1.45rem;
+  --md-text-2xl: 1.9rem;
+  --md-text-3xl: clamp(2rem, 6vw, 2.75rem);
+
+  // Spacing scale.
+  --md-space-1: 4px;
+  --md-space-2: 8px;
+  --md-space-3: 12px;
+  --md-space-4: 16px;
+  --md-space-5: 24px;
+  --md-space-6: 32px;
+  --md-space-7: 48px;
+  --md-page-pad: 16px;
+
+  // Global navigation chrome metrics (consumed by the app shell + page padding).
+  --md-tabbar-h: 58px;
+  --md-rail-w: 76px;
 
   // Semantic colors shared across themes.
   --md-score: #facc15;
@@ -108,6 +136,19 @@ body.theme-dark {
   --md-shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
   --md-shadow-3: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
 
+  // Cinematic / glass surfaces.
+  --md-glass-bg: rgba(26, 26, 29, 0.72);
+  --md-glass-border: rgba(255, 255, 255, 0.08);
+  --md-glass-blur: 18px;
+  --md-rail-edge: var(--md-bg);
+  --md-hero-scrim: linear-gradient(
+    to top,
+    var(--md-bg) 2%,
+    rgba(26, 26, 29, 0.55) 42%,
+    rgba(26, 26, 29, 0.05) 100%
+  );
+  --md-primary-glow: rgba(255, 103, 64, 0.35);
+
   --ion-background-color: var(--md-bg);
   --ion-background-color-rgb: 26, 26, 29;
 
@@ -176,6 +217,19 @@ body.theme-light {
   --md-shadow-2: 0 4px 12px rgba(15, 23, 42, 0.1);
   --md-shadow-3: 0 8px 24px rgba(15, 23, 42, 0.14),
     0 2px 6px rgba(15, 23, 42, 0.08);
+
+  // Cinematic / glass surfaces.
+  --md-glass-bg: rgba(255, 255, 255, 0.72);
+  --md-glass-border: rgba(15, 23, 42, 0.08);
+  --md-glass-blur: 18px;
+  --md-rail-edge: var(--md-bg);
+  --md-hero-scrim: linear-gradient(
+    to top,
+    var(--md-bg) 2%,
+    rgba(246, 247, 251, 0.6) 42%,
+    rgba(246, 247, 251, 0.05) 100%
+  );
+  --md-primary-glow: rgba(37, 99, 235, 0.28);
 
   --ion-background-color: var(--md-bg);
   --ion-background-color-rgb: 246, 247, 251;

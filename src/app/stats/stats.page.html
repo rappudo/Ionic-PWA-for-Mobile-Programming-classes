@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="md-glass-toolbar">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/profile" />
     </ion-buttons>
@@ -9,7 +9,7 @@
 
 <ion-content [fullscreen]="true" class="stats-content">
   <div class="stats-wrap">
-    <a class="stats-wrapped" routerLink="/year-in-review">
+    <a class="stats-wrapped md-reveal" routerLink="/year-in-review">
       <div class="stats-wrapped__icon">
         <ion-icon name="sparkles-outline" aria-hidden="true" />
       </div>
@@ -20,7 +20,7 @@
       <ion-icon name="chevron-forward-outline" class="stats-wrapped__chevron" aria-hidden="true" />
     </a>
 
-    <section class="stats-overview">
+    <section class="stats-overview md-stagger">
       <div class="stats-overview__card">
         <ion-icon name="tv-outline" />
         <span class="stats-overview__value">{{ watchTime().primary }}</span>

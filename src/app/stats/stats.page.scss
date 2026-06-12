@@ -1,11 +1,24 @@
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .stats-content {
   --background: var(--md-bg);
+}
+
+ion-content::part(scroll) {
+  padding-bottom: var(--md-space-6);
 }
 
 .stats-wrap {
@@ -26,11 +39,13 @@ ion-header ion-toolbar {
   border-radius: var(--md-radius-lg);
   text-decoration: none;
   color: #fff;
-  box-shadow: var(--md-shadow-2);
-  transition: transform var(--md-duration) var(--md-ease);
+  box-shadow: 0 10px 26px var(--md-primary-glow);
+  transition: transform var(--md-duration) var(--md-ease),
+    box-shadow var(--md-duration) var(--md-ease);
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 14px 32px var(--md-primary-glow);
   }
 
   &__icon {

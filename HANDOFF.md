@@ -47,6 +47,13 @@ Política geral: `SELECT` é `using (true)` em quase tudo (porque amigos precisa
 
 ## 3. Rotas e estrutura
 
+> **Navegação global (reformulação de 2026-06-11):** todas as rotas autenticadas
+> agora são **filhas de `AppShellComponent`** (`src/app/shell/`), que renderiza um
+> `<ion-router-outlet>` e o chrome de navegação responsivo: **tab bar inferior no
+> mobile → side rail vertical no desktop (≥768px)** com 5 destinos (Início ·
+> Descobrir · Social · Resumo · Perfil). `/auth` e `/share/lists/:token` ficam
+> **fora** do shell. O `authGuard` protege o shell pai (filhos herdam). Ver seção 11.
+
 ```
 /auth                    pública (guestGuard redireciona logado pra /home)
 /home                    authGuard — catálogo + filtros + busca
@@ -280,5 +287,69 @@ mcp__claude_ai_Supabase__list_tables project_id=nmbkndeyxcoydwmxdhay schemas=["p
 ```
 
 Devem aparecer ~10 tabelas + bucket `avatars` no storage.
+
+---
+
+## 11. Reformulação de UI/UX (2026-06-11)
+
+Overhaul de apresentação (sem mudança de backend/data layer). Direção: **navegação
+híbrida responsiva + estética cinematográfica premium + descoberta por hero/trilhos**.
+
+### Fundação (design system)
+- `src/theme/variables.scss` ganhou: escala tipográfica (`--md-text-2xs…3xl`),
+  espaçamento (`--md-space-1…7`, `--md-page-pad`), easing expressivo
+  (`--md-ease-out`, `--md-ease-spring`), métricas do shell (`--md-tabbar-h`,
+  `--md-rail-w`) e **tokens de glass/cinematic** por tema (`--md-glass-bg`,
+  `--md-glass-border`, `--md-glass-blur`, `--md-hero-scrim`, `--md-primary-glow`,
+  `--md-rail-edge`).
+- Novos partials, importados via `@use` em `global.scss`:
+  - `src/theme/_motion.scss` — `@keyframes md-fade-up/fade-in/scale-in/shimmer`;
+    classes `.md-reveal`, `.md-fade-in`, `.md-stagger > *` (usa `--i` por filho p/
+    delay); **guard global de `prefers-reduced-motion`**.
+  - `src/theme/_surfaces.scss` — `.md-glass`, `.md-glass-toolbar`, `.md-scroller`
+    (trilho horizontal sem scrollbar), `.md-section`.
+- **View Transitions API** ativada em `src/main.ts` (`withViewTransitions()`).
+
+### Componentes novos (todos standalone + OnPush)
+- `src/app/shell/app-shell.component.*` — navegação global (tab bar ↔ side rail),
+  highlight por URL (cobre rotas-alias), badge social agregando
+  `friendsService.incomingCount` + `inboxService.pendingCount`.
+- `src/app/components/hero-banner/` — destaque cinematográfico (capa borrada de
+  fundo + scrim + CTAs). Input `anime`, output `select`.
+- `src/app/components/media-rail/` — trilho horizontal (scroll-snap, setas no
+  desktop). Inputs `title/eyebrow/actionLabel/animes`, outputs `select/action`.
+  **Renderiza nada quando `animes` vazio.**
+- `src/app/components/section-header/` — cabeçalho de seção (eyebrow + título +
+  ação "ver tudo").
+
+### Páginas reformuladas
+- **Início (`/home`)**: hero + trilhos (Continue assistindo / Veja imediatamente /
+  Favoritos / por gênero) + grid completo; com busca/filtro ativo mostra só o grid
+  de resultados (`isSearching()`). Toolbar enxuta (só tema + busca + filtros) — os
+  6 ícones de nav migraram pro shell.
+- **Descobrir (`/recommendations`)**: hero (anime do dia) + CTA surpresa em
+  gradiente + trilhos (em alta / pra você / dos amigos) + hint de onboarding.
+- **Social (`/feed`)**: `ion-segment` separando **Atividade** × **Indicações**
+  (badge); atalho p/ `/friends`.
+- **Perfil (`/profile`)**: header cinematográfico (avatar + glow), grid de stats,
+  lista de links rápidos, **toggle de tema consolidado aqui**, install, logout.
+- **Perfil de usuário (`/users/:username`)**: header com glow + `ion-segment`
+  (Avaliações / Favoritos / Listas) com contadores.
+- **Resumo (`/stats`, `/year-in-review`)**, **`/friends`**, **detalhe**
+  (`anime-card`: scrim + Ken Burns na capa), `/lists`, `/surprise`, `/shared-list`:
+  glass headers + motion consistentes.
+
+### Gotchas da reformulação
+- O **shell recebe a classe `.ion-page`** do Ionic (absolute inset 0 + flex
+  column), então `:host` já preenche a viewport; o `.shell__outlet` é `flex:1`.
+- A nav do shell é **in-flow** (ocupa layout), não overlay — páginas não ficam
+  cobertas pela tab bar; o glass aparece nos **headers das páginas** (que sobrepõem
+  o conteúdo rolável).
+- **Budget de `anyComponentStyle`** em `angular.json` foi de 6/8kb → **10/14kb**
+  (estilos cinematográficos mais ricos).
+- Classes globais (`.md-reveal`, `.md-stagger`, `.md-glass-toolbar`) cascateiam
+  para dentro de componentes encapsulados porque são declaradas em `global.scss`.
+- Verificação visual da área **logada** depende de sessão Supabase real (headless
+  sem credenciais só renderiza `/auth`). Build dev + prod verdes.
 
 Boa continuação 🚀

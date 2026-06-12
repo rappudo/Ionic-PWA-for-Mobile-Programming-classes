@@ -1,0 +1,60 @@
+.sh {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--md-space-3);
+  padding: 0 var(--md-page-pad);
+  margin-bottom: var(--md-space-3);
+}
+
+.sh__eyebrow {
+  display: block;
+  font-size: var(--md-text-2xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-primary);
+  margin-bottom: 2px;
+}
+
+.sh__title {
+  margin: 0;
+  font-size: var(--md-text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--md-text);
+  letter-spacing: -0.01em;
+}
+
+.sh__action {
+  flex: 0 0 auto;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  margin-right: -6px;
+  font: inherit;
+  font-size: var(--md-text-sm);
+  font-weight: 600;
+  color: var(--md-text-muted);
+  cursor: pointer;
+  border-radius: var(--md-radius);
+  transition: color var(--md-duration) var(--md-ease), gap var(--md-duration) var(--md-ease);
+
+  ion-icon {
+    font-size: 15px;
+  }
+
+  &:hover {
+    color: var(--md-primary);
+    gap: 7px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--md-primary);
+    outline-offset: 2px;
+  }
+}

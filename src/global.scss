@@ -16,6 +16,8 @@
  * Must come before any @import (Sass @use rules must precede all other rules).
  */
 @use './theme/variables';
+@use './theme/motion';
+@use './theme/surfaces';
 
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";

@@ -1,7 +1,11 @@
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
 }
 
 .shared-content {

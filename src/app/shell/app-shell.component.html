@@ -1,0 +1,30 @@
+<div class="shell">
+  <ion-router-outlet class="shell__outlet"></ion-router-outlet>
+
+  <nav class="shell__nav" aria-label="Navegação principal">
+    <div class="shell__brand" aria-hidden="true">
+      <span class="shell__brand-mark">A</span>
+    </div>
+
+    @for (item of items; track item.route) {
+      <a
+        class="navitem"
+        [class.navitem--active]="isActive(item)"
+        [routerLink]="item.route"
+        [attr.aria-label]="item.label"
+        [attr.aria-current]="isActive(item) ? 'page' : null"
+      >
+        <span class="navitem__icon">
+          <ion-icon
+            [name]="isActive(item) ? item.iconActive : item.icon"
+            aria-hidden="true"
+          />
+          @if (item.badge && item.badge() > 0) {
+            <span class="navitem__badge">{{ item.badge() > 9 ? '9+' : item.badge() }}</span>
+          }
+        </span>
+        <span class="navitem__label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+</div>

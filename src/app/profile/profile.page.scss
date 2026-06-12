@@ -1,7 +1,16 @@
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .profile-content {
@@ -9,36 +18,46 @@ ion-header ion-toolbar {
 }
 
 .profile-wrap {
-  display: flex;
-  justify-content: center;
-  padding: 28px 18px 40px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 var(--md-page-pad) var(--md-space-7);
 }
 
-.profile-card {
-  width: 100%;
-  max-width: 380px;
-  background: var(--md-surface);
-  border: 1px solid var(--md-border);
-  border-radius: var(--md-radius-lg);
-  padding: 26px 22px;
-  box-shadow: var(--md-shadow-2);
+// Cinematic identity header ------------------------------------------------
+.profile-hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  padding: var(--md-space-6) var(--md-space-4) var(--md-space-5);
+  text-align: center;
+  overflow: hidden;
+}
+
+.profile-hero__glow {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 320px;
+  background: radial-gradient(circle at 50% 0%, var(--md-primary-glow), transparent 62%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .profile-avatar {
   position: relative;
-  width: 124px;
-  height: 124px;
+  width: 116px;
+  height: 116px;
   border-radius: 50%;
-  background: var(--md-surface-2);
-  border: 2px solid var(--md-border-strong);
   overflow: hidden;
+  background: var(--md-surface-2);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
+  box-shadow: 0 0 0 4px var(--md-bg), 0 0 0 6px var(--md-primary), var(--md-shadow-3);
 
   img {
     width: 100%;
@@ -46,158 +65,214 @@ ion-header ion-toolbar {
     object-fit: cover;
   }
 
-  ion-icon {
-    font-size: 5.5rem;
+  > ion-icon {
+    font-size: 84px;
     color: var(--md-text-dim);
   }
 
   &__overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+  }
 
-    ion-spinner {
-      --color: #fff;
+  &__edit {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    background: var(--md-primary);
+    color: var(--md-primary-contrast, #fff);
+    border: 3px solid var(--md-bg);
+    transition: transform var(--md-duration) var(--md-ease);
+
+    ion-icon {
+      font-size: 15px;
+    }
+
+    &:hover {
+      transform: scale(1.08);
+    }
+
+    &.is-disabled {
+      opacity: 0.6;
+      pointer-events: none;
     }
   }
 }
 
 .profile-username {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  margin: var(--md-space-3) 0 0;
+  font-size: var(--md-text-xl);
+  font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--md-text);
 }
 
-.watch-card {
-  width: 100%;
-  background: var(--md-surface-2);
+.profile-watch {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--md-space-2);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--md-surface);
   border: 1px solid var(--md-border);
-  border-radius: var(--md-radius);
-  padding: 12px 14px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
+  font-size: var(--md-text-sm);
+  color: var(--md-text-muted);
 
   ion-icon {
-    font-size: 1.6rem;
+    align-self: center;
     color: var(--md-primary);
-  }
-
-  &__value {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
+    font-size: 16px;
   }
 
   &__primary {
-    font-size: 1.4rem;
     font-weight: 800;
+    font-size: var(--md-text-base);
     color: var(--md-text);
   }
 
   &__secondary {
-    font-size: 0.75rem;
     color: var(--md-text-muted);
   }
 
   &__label {
-    color: var(--md-text-muted);
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 600;
+    color: var(--md-text-dim);
   }
 }
 
-.profile-stats {
-  display: flex;
-  gap: 24px;
-  margin: 2px 0 4px;
-  justify-content: center;
-  flex-wrap: wrap;
+.profile-error {
+  margin: 0 0 var(--md-space-3);
+  padding: 10px 12px;
+  border-radius: var(--md-radius);
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--md-error);
+  font-size: var(--md-text-sm);
+  text-align: center;
+}
 
-  &--sub {
-    gap: 18px;
-    margin-top: 0;
-    border-top: 1px solid var(--md-border);
-    padding-top: 10px;
-    width: 100%;
-  }
+// Stats --------------------------------------------------------------------
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--md-space-2);
+  margin-bottom: var(--md-space-5);
 }
 
 .profile-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2px;
+  padding: var(--md-space-3) 4px;
+  border-radius: var(--md-radius);
+  background: var(--md-surface);
+  border: 1px solid var(--md-border);
 
   &__value {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: var(--md-text-lg);
+    font-weight: 800;
     color: var(--md-text);
   }
 
   &__label {
-    font-size: 0.78rem;
-    color: var(--md-text-muted);
+    font-size: 0.66rem;
+    color: var(--md-text-dim);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
 }
 
-.profile-upload-btn {
-  display: inline-flex;
+@media (max-width: 400px) {
+  .profile-stat__label {
+    font-size: 0.6rem;
+  }
+}
+
+// Quick links --------------------------------------------------------------
+.profile-links {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--md-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--md-border);
+  background: var(--md-surface);
+  margin-bottom: var(--md-space-5);
+}
+
+.link-row {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--md-border);
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid var(--md-border-strong);
-  border-radius: var(--md-radius);
-  background: var(--md-surface-2);
+  gap: var(--md-space-3);
+  padding: 14px var(--md-space-4);
+  font: inherit;
+  font-size: var(--md-text-base);
   color: var(--md-text);
-  font-weight: 500;
-  font-size: 0.9rem;
+  text-decoration: none;
   cursor: pointer;
+  width: 100%;
+  text-align: left;
   transition: background var(--md-duration) var(--md-ease);
 
-  ion-icon {
-    font-size: 1.1rem;
-    color: var(--md-text-muted);
+  &:last-child {
+    border-bottom: 0;
   }
 
   &:hover {
-    background: var(--md-surface-3);
+    background: var(--md-surface-2);
+  }
+
+  &__icon {
+    font-size: 20px;
+    color: var(--md-primary);
+    flex: 0 0 auto;
+  }
+
+  &__label {
+    flex: 1 1 auto;
+    font-weight: 500;
+  }
+
+  &__value {
+    color: var(--md-text-muted);
+    font-size: var(--md-text-sm);
+  }
+
+  &__chevron {
+    color: var(--md-text-dim);
+    font-size: 17px;
+    flex: 0 0 auto;
   }
 }
 
-.profile-error {
-  margin: 0;
-  color: var(--md-error);
-  font-size: 0.85rem;
-  text-align: center;
-}
+// Actions ------------------------------------------------------------------
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-space-3);
 
-.profile-stats-btn {
-  width: 100%;
-  --background: var(--md-primary);
-  --background-hover: var(--md-primary-hover);
-  --color: #fff;
-  --border-radius: var(--md-radius);
-  --box-shadow: none;
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 600;
-  margin: 4px 0 0;
-}
-
-.profile-logout {
-  width: 100%;
-  margin-top: 0;
-  text-transform: none;
-  font-weight: 500;
-  letter-spacing: 0;
-  --border-radius: var(--md-radius);
+  ion-button {
+    --border-radius: var(--md-radius);
+    text-transform: none;
+    font-weight: 600;
+    margin: 0;
+  }
 }

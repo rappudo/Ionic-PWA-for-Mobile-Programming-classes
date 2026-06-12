@@ -1,0 +1,57 @@
+// Surface utilities — glass chrome, horizontal scrollers, and shared layout
+// primitives reused across pages. Declared globally so component templates can
+// opt in with a class name.
+
+// Frosted-glass background (toolbars, the nav shell, floating chips).
+.md-glass {
+  background: var(--md-glass-bg);
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  border-color: var(--md-glass-border);
+}
+
+// Apply to ion-toolbar so the header reads as frosted glass over content.
+ion-toolbar.md-glass-toolbar {
+  --background: var(--md-glass-bg);
+  --border-color: var(--md-glass-border);
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+}
+
+// Horizontal rail: scroll-snap row with hidden scrollbar and edge breathing
+// room so the first/last poster never kiss the viewport edge.
+.md-scroller {
+  display: flex;
+  gap: var(--md-space-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--md-page-pad);
+  padding: 4px var(--md-page-pad) var(--md-space-2);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+}
+
+// Section wrapper providing consistent vertical rhythm between rails/blocks.
+.md-section {
+  margin-block: var(--md-space-5);
+
+  &:first-of-type {
+    margin-top: var(--md-space-4);
+  }
+}
+
+// Constrains wide desktop content to a comfortable measure.
+.md-shell-page {
+  width: 100%;
+  margin-inline: auto;
+}

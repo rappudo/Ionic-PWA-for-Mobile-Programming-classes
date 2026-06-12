@@ -7,16 +7,19 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
-  IonBackButton,
+  IonBadge,
   IonButton,
   IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
+  IonLabel,
   IonRefresher,
   IonRefresherContent,
+  IonSegment,
+  IonSegmentButton,
   IonTitle,
   IonToolbar,
   ModalController,
@@ -28,7 +31,10 @@ import {
   chatbubbleOutline,
   closeOutline,
   heart,
+  mailOutline,
+  peopleOutline,
   personCircleOutline,
+  pulseOutline,
   refreshOutline,
   starOutline,
   star as starFilled,
@@ -92,16 +98,20 @@ const STATUS_COLOR: Record<WatchStatus, string> = WATCH_STATUSES.reduce(
   templateUrl: 'feed.page.html',
   styleUrls: ['feed.page.scss'],
   imports: [
-    IonBackButton,
+    IonBadge,
     IonButton,
     IonButtons,
     IonContent,
     IonHeader,
     IonIcon,
+    IonLabel,
     IonRefresher,
     IonRefresherContent,
+    IonSegment,
+    IonSegmentButton,
     IonTitle,
     IonToolbar,
+    RouterLink,
     SkeletonRowComponent,
   ],
 })
@@ -123,6 +133,8 @@ export class FeedPage implements OnInit {
 
   readonly loading = signal(true);
   readonly items = signal<FeedItem[]>([]);
+  readonly segment = signal<'atividade' | 'indicacoes'>('atividade');
+  readonly pendingCount = this.inbox.pendingCount;
 
   readonly hasFriends = computed(() => this.friends.accepted().length > 0);
 
@@ -142,12 +154,19 @@ export class FeedPage implements OnInit {
       'chatbubble-outline': chatbubbleOutline,
       'close-outline': closeOutline,
       heart,
+      'mail-outline': mailOutline,
+      'people-outline': peopleOutline,
       'person-circle-outline': personCircleOutline,
+      'pulse-outline': pulseOutline,
       'refresh-outline': refreshOutline,
       'star-outline': starOutline,
       star: starFilled,
       'time-outline': timeOutline,
     });
+  }
+
+  onSegment(value: 'atividade' | 'indicacoes'): void {
+    this.segment.set(value);
   }
 
   async ngOnInit(): Promise<void> {

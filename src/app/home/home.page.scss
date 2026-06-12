@@ -1,10 +1,12 @@
 // Header / toolbar look ----------------------------------------------------
 ion-header ion-toolbar {
-  --background: var(--md-bg);
+  --background: var(--md-glass-bg);
   --color: var(--md-text);
   --border-color: var(--md-border);
   --border-width: 0 0 1px 0;
   --border-style: solid;
+  -webkit-backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
+  backdrop-filter: saturate(160%) blur(var(--md-glass-blur));
 }
 
 ion-title {
@@ -29,42 +31,6 @@ ion-title {
   &:hover ion-icon {
     transform: rotate(20deg);
     color: var(--md-primary);
-  }
-}
-
-.friends-btn {
-  position: relative;
-
-  &__badge {
-    position: absolute;
-    top: 4px;
-    right: 2px;
-    --background: var(--md-primary);
-    --color: #fff;
-    --padding-start: 5px;
-    --padding-end: 5px;
-    font-size: 0.62rem;
-    min-width: 16px;
-    height: 16px;
-    border-radius: 999px;
-  }
-}
-
-.profile-btn {
-  --color: var(--md-text);
-  --color-hover: var(--md-primary);
-  --background-hover: var(--md-surface-2);
-  --border-radius: var(--md-radius);
-  margin-inline-end: 4px;
-
-  ion-icon {
-    font-size: 1.4rem;
-  }
-
-  &__avatar {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--md-border-strong);
   }
 }
 
@@ -274,4 +240,18 @@ ion-content {
   color: var(--md-text-muted);
   margin: 48px 0;
   font-size: 0.95rem;
+}
+
+// Discovery sections -------------------------------------------------------
+.results {
+  padding-top: var(--md-space-4);
+}
+
+.all-section {
+  margin-top: var(--md-space-6);
+}
+
+// Give the very last rail/grid room above the bottom tab bar / safe area.
+ion-content::part(scroll) {
+  padding-bottom: var(--md-space-5);
 }

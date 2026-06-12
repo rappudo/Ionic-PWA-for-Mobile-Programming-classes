@@ -1,0 +1,48 @@
+<section class="hero" [style.--accent]="accentColor()">
+  @if (anime().imagem; as img) {
+    <img class="hero__backdrop" [src]="img" alt="" aria-hidden="true" />
+  }
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__content md-reveal">
+    <span class="hero__eyebrow">
+      <ion-icon name="flame" aria-hidden="true" />
+      Em destaque
+    </span>
+
+    <h1 class="hero__title">{{ title() }}</h1>
+
+    <div class="hero__meta">
+      <span class="hero__prio">{{ priorityLabel() }}</span>
+      @if (year(); as y) {
+        <span class="hero__dot"></span>
+        <span>{{ y }}</span>
+      }
+      @if (anime().episodios > 0) {
+        <span class="hero__dot"></span>
+        <span>{{ anime().episodios }} eps</span>
+      }
+      @for (g of topGenres(); track g) {
+        <span class="hero__genre">{{ g }}</span>
+      }
+    </div>
+
+    <p class="hero__synopsis">{{ anime().sinopse }}</p>
+
+    <div class="hero__actions">
+      <button type="button" class="hero__cta hero__cta--primary" (click)="open()">
+        <ion-icon name="information-circle-outline" aria-hidden="true" />
+        Ver detalhes
+      </button>
+      <button
+        type="button"
+        class="hero__cta hero__cta--ghost"
+        [class.is-fav]="isFavorite()"
+        (click)="toggleFavorite($event)"
+      >
+        <ion-icon [name]="isFavorite() ? 'heart' : 'heart-outline'" aria-hidden="true" />
+        {{ isFavorite() ? 'Favoritado' : 'Favoritar' }}
+      </button>
+    </div>
+  </div>
+</section>
